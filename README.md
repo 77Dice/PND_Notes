@@ -1,6 +1,12 @@
 # PND_Notes
 Notes and Laboratories from Practical Network Defense Course of Master Degree in Cybersecurity
 ---- devono essere tutti file.md
+
+
+Mark *italic text* with one asterisk, **bold text** with two.
+For ``monospaced text``, use two "backquotes" instead
+
+
 # Docs
 
 go to github docs and `writing on github` section 
