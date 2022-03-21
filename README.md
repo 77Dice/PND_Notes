@@ -1,6 +1,11 @@
 # PND_Notes
 Notes and Laboratories from Practical Network Defense Course of Master Degree in Cybersecurity
 
+## add link
+and other text [text visualize for linkk](https://www.ultimate-guitar.com/) and other text
+
+## add images
+
 
 insomma come va?
 
