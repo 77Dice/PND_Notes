@@ -1,34 +1,28 @@
 # IPv6 Addressing
 ## Benefits of IPv6  
 - not a new protocol (late 1990s)
-- Solve IPv4 shortage of Addresses (**128-bit address space**, written in hexadecimal)
+- Solve IPv4 shortage of Addresses: **128-bit address space**, written in hexadecimal
 - Stateless Configuration and DHCPv6 Stateful
 - End-to-End reachability **without private addresses** and **NAT** (not a security feature)
 - Better support for mobility: [RFC6275](https://datatracker.ietf.org/doc/html/rfc3775)
 - Peer-to-Peer networking easier to create and maintain + more robust QOS and VOIP
 
---> IPv6 **Source** is always ``a Unicast`` || IPv6 **Destination** can be ``Unicast, Multicast or Anycast``
-
-Mark *italic text* with one asterisk, **bold text** with two.
-For ``monospaced text``, use two "backquotes" instead
+--> IPv6 **Source** is always a ``Unicast`` || IPv6 **Destination** can be ``Unicast, Multicast or Anycast``
 
 ## Hex and IPv6 Address Representation
 <p align = "center" >
 <img width="549" alt="IPv6_types" src="https://user-images.githubusercontent.com/101717315/159255943-8fd5d9c4-a366-48e2-8c11-fcb00214b3b1.png">
 </p>
 
-- IPv6 addresses are **128-bit** divided in **$(8\ X\ 16-bit)$** segments or **hextets** in range [0000:FFFF]
-- Represented as **Hexadecimal digits**:**$(1\ hex\ digit=4\ Binary\ bits)$ separated by ":"
-	\end{itemize}
-	\subparagraph{Compressing IPv6 Addresses Rules:}
-	\begin{enumerate}
-		\vspace{-3mm}
-		\setlength{\itemsep}{-3pt}
-		\item \textbf{Leading} zeros in any segment do not have to be written , \textbf{tailing} zeros must be included
-		\item Any single,\textbf{contiguous segment} of all zeros can be represented with double colon "::"
-	\end{enumerate}
+- IPv6 addresses are **128-bit** divided in **8 x 16-bit** segments or **hextets** in range [0000:FFFF]
+- Represented as **Hexadecimal digits**: **1 hex digit = 4 Binary bits** separated by ":"
+
+### Compressing IPv6 Addresses Rules:
+
+1. **Leading** zeros in any segment do not have to be written , **tailing** zeros must be included
+2. Any single,**contiguous segment** of all zeros can be represented with double colon "::"
 			
-	\paragraph{\large IPv6 Global Unicast Address (GUA)}	
+### IPv6 Global Unicast Address (GUA)
 	\begin{itemize}
 		\vspace{-3mm}
 		\setlength{\itemsep}{-3pt}
@@ -36,7 +30,9 @@ For ``monospaced text``, use two "backquotes" instead
 		\item Globally \textbf{Unique and routable} as IPv4 public addresses ; 1/8th of all address space
 		\item \textbf{2001:DB8::/32} are reserved for documentation
 		\item All end users will have a global Unicast address					
-		
+
+<img width="522" alt="IPv6_addr_notation" src="https://user-images.githubusercontent.com/101717315/159258110-a60d761a-d130-435e-98e8-36503fd3753b.png">
+
 		\begin{figure}[h!]
 			\includegraphics[scale=1]{IPv6_addr_notation}
 			\centering
