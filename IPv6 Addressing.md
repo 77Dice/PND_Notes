@@ -1,27 +1,24 @@
 # IPv6 Addressing
-	## Benefits of IPv6
-  
+## Benefits of IPv6  
 - not a new protocol (late 1990s)
-- Solve IPv4 shortage of Addresses (\textbf{128-bit address space}, written in hexadecimal)
+- Solve IPv4 shortage of Addresses (**128-bit address space**, written in hexadecimal)
 - Stateless Configuration and DHCPv6 Stateful
-- End-to-End reachability \textbf{without private addresses} and \textbf{NAT} (not a security feature)
-- Better support for mobility: \href{https://datatracker.ietf.org/doc/html/rfc3775}{RFC6275} 
+- End-to-End reachability **without private addresses** and **NAT** (not a security feature)
+- Better support for mobility: [RFC6275](https://datatracker.ietf.org/doc/html/rfc3775)
 - Peer-to-Peer networking easier to create and maintain + more robust QOS and VOIP
-- [$\implies$] IPv6 \textbf{Source} is always \underline{a Unicast} || IPv6 \textbf{Destination} can \underline{be Unicast, Multicast or Anycast}
-	\end{itemize}
-	\paragraph{\large Hex and IPv6 Address Representation}
-	\begin{figure}[h]
-		\vspace{-7mm}
-		\includegraphics[scale=0.8]{IPv6_types}
-		\centering
-		\caption{IPv6 Address Types}
-	\end{figure}
-	\vspace{-5mm}
-	\begin{itemize}
-		\vspace{-3mm}
-		\setlength{\itemsep}{-3pt}
-		\item IPv6 addresses are \textbf{128-bit} divided in \textbf{$(8\ X\ 16-bit)$} segments or \textbf{hextets} in range [0000:FFFF]
-		\item Represented as \textbf{Hexadecimal digits}:$(1\ hex\ digit=4\ Binary\ bits)$ separated by ":"
+
+--> IPv6 **Source** is always ``a Unicast`` || IPv6 **Destination** can be ``Unicast, Multicast or Anycast``
+
+Mark *italic text* with one asterisk, **bold text** with two.
+For ``monospaced text``, use two "backquotes" instead
+
+## Hex and IPv6 Address Representation
+<p align = "center" >
+<img width="549" alt="IPv6_types" src="https://user-images.githubusercontent.com/101717315/159255943-8fd5d9c4-a366-48e2-8c11-fcb00214b3b1.png">
+</p>
+
+- IPv6 addresses are **128-bit** divided in **$(8\ X\ 16-bit)$** segments or **hextets** in range [0000:FFFF]
+- Represented as **Hexadecimal digits**:**$(1\ hex\ digit=4\ Binary\ bits)$ separated by ":"
 	\end{itemize}
 	\subparagraph{Compressing IPv6 Addresses Rules:}
 	\begin{enumerate}
