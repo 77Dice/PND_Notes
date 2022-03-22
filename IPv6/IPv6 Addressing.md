@@ -24,7 +24,7 @@
 			
 ### IPv6 Global Unicast Address (GUA)
 
-- GUA is identified as **2000::/3** up to **3FFF::/3** 
+- GUA is identified as ***2000::/3*** up to *3FFF::/3*
 ``` 
 first 3 binary bits of first hextet 
 2000:: --> 0010 0000 0000 0000 ::
@@ -35,6 +35,8 @@ first 3 binary bits of first hextet
 - All end users will have a global Unicast address					
 <p align = "center" >
 	<img width="522" alt="IPv6_addr_notation" src="https://user-images.githubusercontent.com/101717315/159258110-a60d761a-d130-435e-98e8-36503fd3753b.png">
+	<br/>
+	<em> caption of image </em>
 </p>
 
 		\item Given a \textbf{Global Routing Prefix} we can \textbf{subnet} with \textbf{1 hextet} creating up to 65k subnets:
@@ -52,8 +54,12 @@ first 3 binary bits of first hextet
 			\caption{3-1-4 Rule for /64 Nets}
 		\end{figure}
 	\end{itemize}
+<img width="595" alt="3-1-4 rule" src="https://user-images.githubusercontent.com/101717315/159585133-a044135a-a0a7-4e9b-9566-f0ac19ba88af.png">
 
 \newpage
+
+
+
 
 	\paragraph{\large IPv6 Link-Local Unicast Addresses}
 		\begin{itemize}
