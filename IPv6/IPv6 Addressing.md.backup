@@ -14,8 +14,6 @@
 <img width="549" alt="IPv6_types" src="https://user-images.githubusercontent.com/101717315/159255943-8fd5d9c4-a366-48e2-8c11-fcb00214b3b1.png">
 </p>
 
-# Usare links al posto delle immagini
-[link to types of addresses](https://oracle-patches.com/en/cloud-net/ipv6-address-types-unicast,-multicast,-and-anycast)
 
 - IPv6 addresses are **128-bit** divided in **(8 x 16-bit)** segments or **hextets** in range [0000:FFFF]
 - Represented as **Hexadecimal digits**: **1 hex digit = 4 Binary bits** separated by ":"
