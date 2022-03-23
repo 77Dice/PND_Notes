@@ -131,4 +131,9 @@ what to do now??? from 75 to the end .... <br/> per ora non s fa sentire la manc
 	host-->dhcp;
 	dhcp-->host;
 ```
-
+```mermaid
+sequenceDiagram
+    ISP-)RR : hello
+    RR-)ISP : second hello
+    RR-)NET : eccoti la roba 
+```
