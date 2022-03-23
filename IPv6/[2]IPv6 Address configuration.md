@@ -1,4 +1,4 @@
-# IPv6 Protocol
+# IPv6 Address Configuration
 
 ## ICMPv6 Neighbour Discovery Protocol(NDP)
 
@@ -111,24 +111,24 @@ Now host will contact DHCP server for GUA,DNS addr and `all IPv6 Informations`
 
 ## DHCPv6 Prefix Delegation Process
 
-> Way to acquire from ISP a prefix for your network
+> ([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415)|[RFC3633]([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415))) Way to acquire from ISP a prefix for your network
 
-- IPv6 has *complete Reachability (Delegation Router-to-host)* 
-- we have 3 elements 
-
-> ora sarebbe utile usare i diagrammi di GIT.... forse è megli
-
-- for DHCPv4 Private Address x home 
-	- simply deliver it to the home router and then it's ok(use private) and NAT
-
-- 
-what to do now??? from 75 to the end .... <br/> per ora non s fa sentire la mancanza di immagini. anche perche posso usare altro.... di sicuro però se devo aggiungere qualcosa quelli sono gli schemi o diagrammi....
-
-# try diagrammi
-
+- for DHCPv4 ISP :
+  - ISP deliver `public IPv4` address to home router
+  - DHCPv4 + [RFC1918](https://datatracker.ietf.org/doc/html/rfc1918) allocate private address for private network
+  - `NAT` is used for translation
+- IPv6 has *complete Reachability (ISP Delegation Router-to-host)* 
+- elements involved are: `ISP Delegation Router (ISP-DR)` + `Requestiong Router (RR)` + `host`
+- RR request, as any other client, an IPv6 address for `its ISP facing interface` from ISP-DR (OPT 1,2,3)
+- After external interface of RR is ready then the Prefix Delegation Process Starts:
 ```mermaid
-	graph TD;
-	host-->dhcp;
-	dhcp-->host;
+sequenceDiagram
+	ISP-DR->RR : RR addr config
+	RR->>ISP-DR : DHCPv6-PD  REQUEST
+    ISP-DR->>RR : DHCPv6-PD REPLY
+    note over ISP-DR,RR : separate prefix for inner network/LAN
+    note over ISP-DR,RR : prefix + DNS + Domain name
+    RR->>host : Router Advertisement           
+    note over RR,host : /64 prefix + DNS + Domain name
+    note right of host : create Interface ID (EUI-64 | Random)
 ```
-
