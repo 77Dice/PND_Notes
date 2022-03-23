@@ -58,8 +58,10 @@ Global Unicast Address:
 2001:DB8:CAFE:1: + Interface ID
 ```
 Now host can compute its Interface ID using either `EUI-64` or `Random 64-bit value` and gain a valid and routable GUA address
-- Random 64-bit value can be used as `Privacy extension`:
-	- as Temporary IP address and be untraceable in the internet
+- SLAAC + Random 64-bit value can be used as `Privacy extension`:
+	- as Temporary IP address (short lifetime)
+	- to be `untraceable` in the internet
+	- common to have multiple temporary addresses (for new connections)
 	- is supported by Win vista and newer + linux
 
 ### Duplicate Address Detection(DAD):
