@@ -132,6 +132,21 @@ what to do now??? from 75 to the end .... <br/> per ora non s fa sentire la manc
 	dhcp-->host;
 ```
 ```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+```mermaid
+sequenceDiagram
+    Alice->>+John: Hello John, how are you?
+    Alice->>+John: John, can you hear me?
+    John-->>-Alice: Hi Alice, I can hear you!
+    John-->>-Alice: I feel great!
+```
+
+```mermaid
 sequenceDiagram
     ISP-)RR : hello
     RR-)ISP : second hello
