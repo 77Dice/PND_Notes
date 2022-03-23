@@ -10,24 +10,26 @@
 --> IPv6 **Source** is always `Unicast` || IPv6 **Destination** can be `Unicast, Multicast or Anycast`
 
 ## Hex and IPv6 Address Representation
+
+>([addr types](https://oracle-patches.com/en/cloud-net/ipv6-address-types-unicast,-multicast,-and-anycast)) IPv6 addresses are **128-bit** divided in **(8 x 16-bit)** segments or **hextets** in range [0000:FFFF]
+> and Represented as **Hexadecimal digits**: `1 hex digit = 4 Binary bits` separated by ":"
+
+
 <p align = "center" >
-<img width="549" alt="IPv6_types" src="https://user-images.githubusercontent.com/101717315/159255943-8fd5d9c4-a366-48e2-8c11-fcb00214b3b1.png">
+	<img width="549" alt="IPv6_types" src="https://user-images.githubusercontent.com/101717315/159255943-8fd5d9c4-a366-48e2-8c11-fcb00214b3b1.png">
+	<br/>
+	<em> IPv6 Address Types </em>
 </p>
 
-# Usare links al posto delle immagini
-[link to types of addresses](https://oracle-patches.com/en/cloud-net/ipv6-address-types-unicast,-multicast,-and-anycast)
-
-- IPv6 addresses are **128-bit** divided in **(8 x 16-bit)** segments or **hextets** in range [0000:FFFF]
-- Represented as **Hexadecimal digits**: **1 hex digit = 4 Binary bits** separated by ":"
 
 ### Compressing IPv6 Addresses Rules:
 
 1. `Leading` zeros in any segment do not have to be written , `tailing` zeros must be included
 2. Any single, **contiguous segment** of all zeros can be represented with double column `::`
 			
-### IPv6 Global Unicast Address (GUA)
+## IPv6 Global Unicast Address (GUA)
 
-- GUA is identified as ***2000::/3*** up to *3FFF::/3*
+>GUA is identified as *2000::/3* up to *3FFF::/3*
 ``` 
 first 3 binary bits of first hextet 
 2000:: --> 0010 0000 0000 0000 ::
@@ -39,37 +41,31 @@ first 3 binary bits of first hextet
 <p align = "center" >
 	<img width="522" alt="IPv6_addr_notation" src="https://user-images.githubusercontent.com/101717315/159258110-a60d761a-d130-435e-98e8-36503fd3753b.png">
 	<br/>
-	<em> caption of image </em>
+	<em> IPv6 Address Notation </em>
 </p>
 
-		\item Given a \textbf{Global Routing Prefix} we can \textbf{subnet} with \textbf{1 hextet} creating up to 65k subnets:
-		
-		\begin{itemize}
-			\setlength{\itemsep}{-3pt}
-			\item \textbf{Prefix:} equivalent to \textit{Network address} of IPv4
-			\item \textbf{Prefix length:} equivalent to \textit{subnet mask} of IPv4
-			\item \textbf{Interface ID:} equivalent to \textit{host portion} of an IPv4 address
-			\item we use \textbf{3-1-4 rule} for divide a GUA into \textbf{IPv6 /64 local networks} as shown:
-		\end{itemize}
-		\begin{figure}[h]
-			\includegraphics[scale=0.8]{3-1-4 rule}
-			\centering
-			\caption{3-1-4 Rule for /64 Nets}
-		\end{figure}
-	\end{itemize}
-<img width="595" alt="3-1-4 rule" src="https://user-images.githubusercontent.com/101717315/159585133-a044135a-a0a7-4e9b-9566-f0ac19ba88af.png">
+- Given a *Global Routing Prefix* we can `subnet with 1 hextet` creating up to 65k subnets:
+  - `Prefix:` equivalent to *Network address* of IPv4
+  - `Prefix length:` equivalent to *subnet mask* of IPv4
+  - `Interface ID:` equivalent to *host portion* of an IPv4 address
+  - we use `3-1-4 rule` for divide a GUA into `IPv6 /64 local networks` as shown:
+<p align = "center" >
+	<img width="595" alt="3-1-4 rule" src="https://user-images.githubusercontent.com/101717315/159585133-a044135a-a0a7-4e9b-9566-f0ac19ba88af.png">
+	<br/>
+	<em> 3-1-4 rule </em>
+</p>
 
-\newpage
+## IPv6 Link-Local Unicast Addresses
+
+> link-local is identified as *FE80::/10* up to *FEBF::/10* 
+```
+first 10 binary bits of first 3 hextets
+FE80:: --> 1111 1110 1000 0000:: ==> FEBF:: --> 1111 1110 1011 1111::
+---.	   ---- ---- --.. ....                  ---- ---- --.. ....
+```
 
 
 
-
-	\paragraph{\large IPv6 Link-Local Unicast Addresses}
-		\begin{itemize}
-			\vspace{-3mm}
-			\setlength{\itemsep}{-3pt}
-			\item \textit{ll} is identified as \textbf{FE80::/10} up to \textbf{FEBF::/10} (\textit{first 10 binary bits of first 3 hextets})
-			\item \textit{FE80:: $ \rightarrow $\textbf{1111 1110 10}00 0000} $ \implies $ \textit{FEBF:: $ \rightarrow $ \textbf{1111 1110 10}11 1111}
 			\item Used to communicate with other devices \textbf{on the link} then \textbf{Not Routable}
 			\item \textbf{Only have to be unique on the link} (Network segment-internal lan)
 			\item \textbf{every IPv6 device} must have \textbf{at least} a Link-local address
