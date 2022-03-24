@@ -1,4 +1,4 @@
-# IPv6 Address Configuration
+# IPv6 Dynamic Address Configuration
 
 ## ICMPv6 Neighbour Discovery Protocol(NDP)
 
