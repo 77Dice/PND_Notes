@@ -2,7 +2,7 @@
 
 ## IPv6 Packet
 
->([v6 Wiki](https://en.wikipedia.org/wiki/IPv6_packet)|[v4Wiki](https://en.wikipedia.org/wiki/IPv4)) IPv6 packet has Fixed size and Simpler header than IPv4
+>([v6 Wiki](https://en.wikipedia.org/wiki/IPv6_packet)|[v4Wiki](https://en.wikipedia.org/wiki/IPv4)|[tcpiguide](http://www.tcpipguide.com/free/t_InternetProtocolVersion6IPv6IPNextGenerationIPng.htm)) IPv6 packet has Fixed size and Simpler header than IPv4
 
 IPv6 has fized size of `40 bytes` or *320 bits*
 - 64 bits of :
@@ -55,6 +55,7 @@ some IPv4 fields:
 | Decimal val | EH Name     | EH Description |
 | ----------- | ----------- |    ----------- |
 |  0   | Hop-by-Hop Options     | info examined by every router along the path |
+| 60 | Destination Options | info examined by routers LISTED IN routing EH |
 | 43   | Routing    | def. destination path |
 |  44   | Fragment | end-to-end fragmentation |
 |  51   | Autentication Header(AH)       | Authentication + Integrity |
