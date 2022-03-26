@@ -165,7 +165,6 @@ ip addr change when using NAT
 - specify how many bits of the 32-bit total will specify the network address `/x`
 - The remaining bits specify the host addresses
 - 192.168.1.248/30
-- $2+2 = 4$
   $$ 2^{32−30} − 2 = 2\ hosts$$
   $$ 192.168.1.248\ is\ Network\ Address$$
   $$ 192.168.1.251\ is\ Broadcast\ Address$$
