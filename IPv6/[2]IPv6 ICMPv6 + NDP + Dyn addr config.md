@@ -1,18 +1,25 @@
+# ICMPv6
+
+>([wiki](https://it.wikipedia.org/wiki/ICMPv6)|[format](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol_for_IPv6)) following protocol (NDP) `uses five ICMPv6 packets `to performs its functions. 
+> - All defined in the `type` field of the packet (133-137)
+> -	[(ICMPv6) Parameters](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml)
+> - [RFC 4443](https://datatracker.ietf.org/doc/html/rfc4443)
+
 # IPv6 Dynamic Address Configuration
 
-## ICMPv6 Neighbour Discovery Protocol(NDP)
+## Neighbour Discovery Protocol(NDP)
 
->([Wiki](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)) Its a *Link Layer Protocol* and it defines many pakets types(13x) used for:
+>([Wiki](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)) Its a *Link Layer Protocol* and it defines five pakets types(13x) used for:
 
 ### IPv6 Address Resolution (IPv4 ARP):
 
 given IPv6 address an host want to know the related `mac of its neighbours` and insert it in the Neighbour Cache using:
-- (135)Neighbour Solicitation Message: Host asking for `Link-Layer Address(MAC)` of another Host; 
+- (`135`)Neighbour Solicitation Message: Host asking for `Link-Layer Address(MAC)` of another Host; 
 	- `Multicast Request` to find out address of new hosts ([to solicited node](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)):
 		- host subscribe to *multicast Group* that correspond to its MAC
 		- every time someone wants to reach him they just send a Neighbour Sollicitation to its Multicast Group 
 	- `Unicast Request` just to verify if host is reachable or not
-- (136)Neighbour Advertisement Message: answer to Neighbour Sollicitation message
+- (`136`)Neighbour Advertisement Message: answer to Neighbour Sollicitation message
 
 Respectively in IPv4 we have:
 - ARP Request/Reply messages
@@ -22,8 +29,8 @@ Respectively in IPv4 we have:
 ### Dynamic IPv6 Address Allocation:
 
 In order to obtain `IPv6 Address information` an host need to send a Solicitation to the Router and then It will answer will all possible `available configuration` for that specific network `stateless or stateful`
-- (133)Router Solicitation Message: Host wants to locate `Routers on attached link` and ask for IPv6 configuration Options available
-- (134)Router Advertisement Message: Routers `advertise their presence` periodically or as respond to a Router Solicitation message
+- (`133`)Router Solicitation Message: Host wants to locate `Routers on attached link` and ask for IPv6 configuration Options available
+- (`134`)Router Advertisement Message: Routers `advertise their presence` periodically or as respond to a Router Solicitation message
  
  
 ```mermaid
@@ -40,6 +47,8 @@ sequenceDiagram
 
 ```
 
+- (`137`)Redirect message: routers inform hosts of a better first hop router for a destination
+
 for IPv4 hosts:
 - DHCP or static allocation 
 
@@ -52,7 +61,7 @@ Available configuration for host sent by Router Advertisement message can be:
 	- No full knowledge of the network state or list of addresses used
 - OPT3: All hosts except default Gateway use DHCPv6
 	- `stateful`: just ask to an DHCPv6 server all info for IPv6 configuration
-- (137)Redirect message: routers inform hosts of a better first hop router for a destination
+
 
 ### SLAAC - No DHCPv6:
 
