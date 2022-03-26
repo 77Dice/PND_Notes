@@ -201,50 +201,65 @@ the same network than the host **find /x and check if destination is inside the 
 ## Layering Concepts 
 
 Communication between hosts is organized in tasks, assigned to a `Layer`
-- Offer a `service` to the User in the layer above + exploit the services offered the layer above
+- Offer a `service` to the User in the layer `above` + exploit the services offered the layer above
 - Tasks involves the exchange of messages that follow a set of rules desined by a `protocol`
 - Each layer adds some `protocol information` and provides data to the layer below
 - Encapsulation/Decapsulation:
-  1. Each layer *adds* some protocol information and provides the data to the *layer below*
-  2. the Physical layer sends data over the *physical medium* to the destination
-  3. Each protocol in the destination *reads* the appropriate *protocol information* and forwards
-  the data to the *layer above*
+  1. Each layer `adds` some protocol information and provides the data to the `layer below`
+  2. the Physical layer sends data over the `physical medium` to the destination
+  3. Each protocol in the destination `reads` the appropriate `protocol information` and forwards
+  the data to the `layer above`
 
 ## Layer ideal representation
 
- Transport: the illusion of direct end-to-end connection between processes
- Network: transferring data between arbitrary nodes
- Data Link: transferring data between directly connected systems (cable,shared medium)
+
+> ![picture 3](../images/3680607ee75de3649d05e7a1c3b66c10bd28f1b96fc04e6267922be4d49c5b59.png)<p align ="center">
+*layer concept*
+<p/>
+
+- `Transport`: the illusion of direct end-to-end connection between processes
+- `Network`: transferring data between arbitrary nodes
+- `Data Link`: transferring data between directly connected systems (cable,shared medium)
 
 ## Layered architectures 
-All architectures refers to the same type of computer communications
-network: Packet switched network where every packet is supposed to travel independently from
+
+> All architectures refers to the same type of computer communications network: [Packet switched network](https://en.wikipedia.org/wiki/Packet_switching) 
+> where every packet is supposed to travel independently from
 others
- Each layer has a type of address:
- Application ly: internet name (www.sapienza.it)
- Transport ly: Port number in the range [0..65535] that identies the client or server
-application-service
- Internet ly: IP address that identies a host in a network (where it is) a.b.c.d/h
- Datalink ly: MAC address that identies a network card (who it is) A:B:C:D:E:F
+
+> ![picture 4](../images/5d97bca217aaf12d8e6cdaaaa2b7e9a953aae9ce13b86a6849ab87c501da3e04.png)  <p align ="center">
+*Protocol stack*
+<p/>
+
+- Each layer has a `type of address`:
+  - Application ly: `internet name` (www.sapienza.it)
+  - Transport ly: `Port number` in the range [0..65535] that identifies the client or server application-service
+  - Internet ly: `IP address` that identifies a host in a network (where it is) a.b.c.d/h
+  - Datalink ly: `MAC address` that identifies a network card (who it is) AA:BB:CC:DD:EE:FF
+  
 ## Transport layer: TCP and UDP
- UDP: no control on data exchange (connection-less)
- TCP: Reliable data exchange + Control Flow + Bigger header + TCP handshake
- TCP/IP and Data Communications Administration Guide
+
+- UDP: no control on data exchange (`connection-less`)
+- TCP: Reliable data exchange + Control Flow + [Bigger header](https://www.lifewire.com/tcp-headers-and-udp-headers-explained-817970) + TCP handshake
+
+
+> [TCP/IP and Data Communications Administration Guide](https://docs.oracle.com/cd/E19504-01/802-5753/index.html) ![picture 5](../images/c7121fd59cdab0ee3e954fc2ba263207192e3e8a16547b8a39c0ba25850d217f.png)<p align ="center"> *TCP handshake* 
+<p/>
 
 ## Well-Known Ports 
-Range is [0..65535]; Source port is randomly chosen by OS but destination
-port determines the required service(application)
-20
-Figure 22: TCP Handshake
- Assigned Ports [0..1023] are said "well-known ports" and used for standard internet applications:
-TCP/UDP Ports Wiki
- common Well-known ports
- Ports [1024..49151] can be registered with internet Application Naming Authority IANA
- Ports [49152..65535] ephemeral ports
+
+Range is `[0..65535]`; Source port is randomly chosen by OS but `destination port` determines the `required service(application)`
+
+- Assigned Ports `[0..1023]` are said "well-known ports" and used for `standard internet applications`:
+  - [TCP/UDP Ports Wiki](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers)
+  - [common Well-known ports](https://www.utilizewindows.com/list-of-common-network-port-numbers/)
+- Ports `[1024..49151]` can be registered with internet Application Naming Authority IANA
+- Ports `[49152..65535]` ephemeral ports
 
 
-TCP UDP
-FTP 20-21 SSH 22 DNS 53 DHCP 67-68
-Telnet 23 SMTP 25 TFTP 69 SNMP 161
-SMTP 25 HTTP 80 RIP 520
-IMAP 143 SSL 443
+|TCP|  |  |  | | UDP| | ||
+|--|--|--|--|--|--|--|--|--|
+| FTP| 20-21| SSH |22|...|DNS |53| DHCP |67-68|
+| Telnet| 23| SMTP| 25|...| TFTP| 69| SNMP| 161|
+|HTTP| 80| IMAP| 143|...| RIP| 520| .| .|
+|SSL| 443|.|.|...|. |.|.|.|
