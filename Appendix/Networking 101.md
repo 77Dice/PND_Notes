@@ -30,7 +30,7 @@
 ## Internet core Management
 
 - Routers and fiber-links form the internet; Routers works together to figure out the `most efficient path` for routing a packet and *Distributed Alg.* can adapt to changing internet conditions
-- The core is provided by *ISPs* that *interconnect* multiple continents
+- The core is provided by *`ISPs`* that *`interconnect`* multiple continents
   - Global IPSs or Tier-1 ISPs
   - Regional ISPs or Tier-2 ISPs
 - internet Backbone connects tier-1 ISPs
@@ -72,7 +72,7 @@
 
 ## Ethernet (IEEE 802.3) networks
 
-- each host in Eth. net has a `NIC-network internet card` with a "generally" fixed address
+- each host in Ethernet networks has a `NIC-network internet card` with a "generally" fixed address
 - MAC addresses are *48 bits(6 bytes)* long and UNIQUELY identify hosts in the network
 - each host only processes packets,with fixed format, intended for it
 - `How build one?` All hosts connected together with a `shared transmission system` based on Ethernet are a network as if they were connected to the same medium
@@ -107,9 +107,9 @@ in the network (only broadcast mss are "replicated")
 
 - interconnect local networks among them
 - Distribution layer is at level of `Autonomous Systems` like big enterprises and ISPs
-- Core layer is at the level of *continents*
-- they are connected by *Routers* and uses *logical Addressing:* IP
-- Routers are the *default gateways* and gives access to the internet
+- Core layer is at the level of `continents`
+- they are connected by `Routers` and uses `logical Addressing`: IP
+- Routers are the `default gateways` and gives access to the internet
 
 ## Ethernet vs IP Addresses
 
@@ -156,54 +156,62 @@ ip addr change when using NAT
 - 192.168.8.0/24 Class C IP address
     - First address is reserved for `network address`
     - Last address is reserved for `broadcast address`
-    - 232−netmask − 2 = #hosts in any [CIDR](https://it.wikipedia.org/wiki/Supernetting) specified network
+    $$ 2^{32 - netmask} - 2 $$
+> #hosts in any [CIDR](https://it.wikipedia.org/wiki/Supernetting) specified network
 
 ## Variable Length Subnet Mask(VLSM)
 
-- Introduced by CIDR(Classless Inter-Domain Routing) as new notation for the netmask as a `flexible way` to allocate the right number of hosts in each context
- specify how many bits of the 32-bit total will specify the network address "/x"
- The remaining bits specify the host addresses
- 192.168.1.248/30
- 232−30 − 2 = 2 hosts
- 192.168.1.248 is Network Address
- 192.168.1.251 is broadcast Address
- RFC 3021: Using 31-Bit prexes on IPv4 Point-to-Point Links
+- Introduced by CIDR(Classless Inter-Domain Routing) as new notation for the netmask as a `flexible way` to allocate the `right number` of hosts in each context
+- specify how many bits of the 32-bit total will specify the network address `/x`
+- The remaining bits specify the host addresses
+- 192.168.1.248/30
+  $$ 2^{32−30} − 2 = 2\ hosts$$
+  $$ 192.168.1.248\ is\ Network\ Address$$
+  $$ 192.168.1.251\ is\ Broadcast\ Address$$
+- [RFC 3021](https://datatracker.ietf.org/doc/html/rfc3021): Using `31-Bit prefixes` on IPv4 Point-to-Point Links
 
 ## VLSM Addresses examples 
 
 Determine the network part,host part, the network size(numb
-of hosts), the network address,the broadcast address,and the type of IP addresses.
-<bin converter>
- 192.168.4.32 netmask 255.255.255.224
- 224 → (11100000)2 it follows that subnet is /27
- host portion is 5bits and number of hosts in the network are 232−27 − 2 = 30
- network address: 192.168.4.(001|00000)2 = 192.168.4.32/27
- broadcast address: 192.168.4.(001|11111)2 = 192.168.4.63
- type of IP address is VLSM derived from a Class C Address
- 10.11.12.0/21
- host portion of 11bits hosts in the network 232−21 − 2 = 2046
- network address: 10.11.(00001|000)2.0 = 10.11.8.0
- broadcast address: 10.11.(00001|111.11111111)2 = 10.11.15.255
+of hosts), the network address,the broadcast address,and the type of IP addresses
+[(bin converter)](https://www.rapidtables.com/convert/number/binary-to-decimal.html)
 
-### Remote Addresses examples
+- 192.168.4.32 netmask 255.255.255.224
+    - $224 → (11100000)_2$ it follows that subnet is `/27`
+    - host portion is 5bits and number of hosts in the network are $2^{32−27} − 2 = 30$
+    - network address: $192.168.4.(001|00000)_2 = 192.168.4.32/27$
+    - broadcast address: $192.168.4.(001|11111)_2 = 192.168.4.63$
+    - type of IP address is VLSM derived from a Class C Address
+- 10.11.12.0/21
+    - host portion of 11bits hosts in the network $2^{32−21} − 2 = 2046$
+    - network address: $10.11.(00001|000)_2.0 = 10.11.8.0$
+    - broadcast address: $10.11.(00001|111.11111111)_2 = 10.11.15.255$
 
- the destination address is remote or local? if it belongs to
-the same network than the host
-nd /x and check if destination is inside the range of the host network
+## Remote Addresses examples
+
+> the destination address is remote or local? if it belongs to
+the same network than the host **find /x and check if destination is inside the range of the host network**
+
+> ![picture 1](../images/f545f9c6dbb9996553e3817b0e886cd025799368e702f2c091175610963ecf1b.png)  
+
+> ![picture 2](../images/b27d3a207632980f4b7a2506c580cdd75f4d244e79842059b386043f06cf5374.png)  
+
+
 
 ## Layering Concepts 
 
-Communication between hosts is organized in tasks, assigned to a Layer
- Oer a service to the User in the layer above + exploit the services oered the layer above
- Tasks involves the exchange of messages that follow a set of rules dened by a protocol
- Each layer adds some protocol information and provides data to the layer below
- Encapsulation/Decapsulation:
-1. Each layer adds some protocol information and provides the data to the layer below
-2. the Physical layer sends data over the physical medium to the destination
-3. Each protocol in the destination reads the appropriate protocol information and forwards
-the data to the layer above
+Communication between hosts is organized in tasks, assigned to a `Layer`
+- Offer a `service` to the User in the layer above + exploit the services offered the layer above
+- Tasks involves the exchange of messages that follow a set of rules desined by a `protocol`
+- Each layer adds some `protocol information` and provides data to the layer below
+- Encapsulation/Decapsulation:
+  1. Each layer *adds* some protocol information and provides the data to the *layer below*
+  2. the Physical layer sends data over the *physical medium* to the destination
+  3. Each protocol in the destination *reads* the appropriate *protocol information* and forwards
+  the data to the *layer above*
 
 ## Layer ideal representation
+
  Transport: the illusion of direct end-to-end connection between processes
  Network: transferring data between arbitrary nodes
  Data Link: transferring data between directly connected systems (cable,shared medium)
