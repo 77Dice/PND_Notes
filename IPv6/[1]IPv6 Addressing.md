@@ -97,6 +97,60 @@ Starting from a 48-bit MAC address
 
 ## IPv6 Multicast Addresses
 
+> How send single packet `to multiple destinations` simultaneously? (one-to-many)
+> ![picture 11](../images/multicast12.png) <p align = "center" >	
+	<em> Multicast Address </em>
+</p>
 
+* exists two types of Multicast addresses:
+> 1. Assigned as `FF00::/8` up to `FFFF::/8` 
+```
+first 8 binary bits of first 2 hextets 
+FF00:: --> 1111 1111 0000 0000:: ==> FFFF:: → 1111 1111 1111 1111::
+--..       ---- ---- .... ....       --..     ---- ---- .... ....
+```
+> 2. Solicited-Node as `FF02::1:FF00:0000/104` 
+  - *generated from `least-significant 24-bits` of Uni/Anycast address*
+  - used for the Neighbor Discovery Protocol(NDP)
+  -  [Wiki to Solicited-node Address Example](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)
 
+### scope
 
+4bit field that define the `range` of the Multicast packet:
+  - inside Broadcast domain(2)
+  - all $eth_x$ of one router(5) *(need to be Enabled)*
+
+|Range|scope value|||
+|-|-|-|-|
+|Reserved|0|Interface-Local|1|
+|Link-Local|2|Site-Local|5|
+|Organization-Local|8|Global|E|
+
+### Flag
+
+- 0 :: `Permanent` for [well-known Multicast addresses](https://www.ciscopress.com/articles/article.asp?p=2803866&seqNum=5) assigned by IANA
+- 1 :: `Non-permanently-assigned` , "dynamically" assigned
+
+> Well-known Assigned IPv6 Multicast Addresses [IANA-Reference](https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml)
+> ![picture 12](../images/multi-ll.png) <p align = "center" >	
+	<em> Link-local scope Assigned MultiCast Addresses </em>
+</p>
+
+> ![picture 13](../images/multi-5.png) <p align = "center" >	
+	<em> Site-local scope Assigned MultiCast Addresses </em>
+</p>
+
+- <u>All IPv6 Devices:</u> `FF02::1` All devices including the router
+- every IPv6 device will listen and process packets
+- more efficient that IPv4 Ethernet Broadcast
+
+> ![picture 14](../images/ROuterAdv.png) <p align = "center" >	
+	<em> Router Advertisement </em>
+</p>
+
+- <u>All IPv6 Routers:</u> `FF02::2` All Routers
+- used by devices to communicate with IPv6 Routers
+
+> ![picture 15](../images/ROuterSol.png) <p align = "center" >	
+	<em> Router Solicitation </em>
+</p>
