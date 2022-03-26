@@ -85,6 +85,9 @@ Starting from a 48-bit MAC address
 
 ### Why we use Link-local Addresses?
 
+
+> Link-Local addresses have an `Important role` in IPv6
+
 → Used as `Source IPv6 Address` before a device gets one dynamically (SLAAC || DHCPv6)
 
 → Router's link-local address is used by devices as `default gateway`
@@ -93,7 +96,6 @@ Starting from a 48-bit MAC address
 
 → used by Routers as the `next-hop address` in the routing table
 
-> Link-Local addresses have an `Important role` in IPv6
 
 ## IPv6 Multicast Addresses
 

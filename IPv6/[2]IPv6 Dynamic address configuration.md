@@ -7,12 +7,12 @@
 ### IPv6 Address Resolution (IPv4 ARP):
 
 given IPv6 address an host want to know the related `mac of its neighbours` and insert it in the Neighbour Cache using:
-- (135)Neighbour Solicitation Message: Host asking for `Link Layer Address(MAC)` of another Host; 
+- (135)Neighbour Solicitation Message: Host asking for `Link-Layer Address(MAC)` of another Host; 
 	- `Multicast Request` to find out address of new hosts ([to solicited node](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)):
 		- host subscribe to *multicast Group* that correspond to its MAC
-		- every time someone wants to reach him they just send to its Multicast Group a Neigh. Sollicitation
+		- every time someone wants to reach him they just send a Neighbour Sollicitation to its Multicast Group 
 	- `Unicast Request` just to verify if host is reachable or not
-- (136)Neighbour Advertisement Message: answer to Neighbour Sollicitation mss.
+- (136)Neighbour Advertisement Message: answer to Neighbour Sollicitation message
 
 Respectively in IPv4 we have:
 - ARP Request/Reply messages
@@ -22,9 +22,27 @@ Respectively in IPv4 we have:
 ### Dynamic IPv6 Address Allocation:
 
 In order to obtain `IPv6 Address information` an host need to send a Solicitation to the Router and then It will answer will all possible `available configuration` for that specific network `stateless or stateful`
-- (133)Router Solicitation Message: Host wants to locate `Routers on an attached link` and ask for IPv6 configuration Options available
+- (133)Router Solicitation Message: Host wants to locate `Routers on attached link` and ask for IPv6 configuration Options available
 - (134)Router Advertisement Message: Routers `advertise their presence` periodically or as respond to a Router Solicitation message
  
+ 
+```mermaid
+sequenceDiagram
+	Host->>Router: ICMPv6 Router Solicitation
+	note over Host,Router : To all IPv6 Routers, I need IPv6 address information!!
+    Note right of Router: To all IPv6 Devices
+    Note right of Router: Let me tell you possible Options
+	Router->>Host: ICMPv6 Router Solicitation + Options
+	Note over Router,Host: 1. slaac 2. slaac+stateless 3. stateful DHCPv6 
+	Note left of Host: I decide Option x ??? 
+	Note left of Host:  info x iniziare la config?? 
+    
+
+```
+
+for IPv4 hosts:
+- DHCP or static allocation 
+
 ## Stateless Address Autoconfiguration (SLAAC)
 
 Available configuration for host sent by Router Advertisement message can be:
@@ -35,8 +53,6 @@ Available configuration for host sent by Router Advertisement message can be:
 - OPT3: All hosts except default Gateway use DHCPv6
 	- `stateful`: just ask to an DHCPv6 server all info for IPv6 configuration
 - (137)Redirect message: routers inform hosts of a better first hop router for a destination
-- for IPv4 cases:
-	- DHCP or static allocation 
 
 ### SLAAC - No DHCPv6:
 
@@ -51,7 +67,7 @@ Prefix-length:	/64
 Local Host now knows:
 ```
 Network Prefix:	2001:DB8:CAFE:1::
-Prefix-len:	/64
+Prefix-len:		/64
 ll Def Gateway:	FE80::1
 ---------------------------------
 Global Unicast Address:
@@ -87,7 +103,23 @@ Prefix-length:	/64
 Managed address configuration flag == 0
 Other configuration flag 	   == 1
 ```
-Now host after generate Interface ID it will contact DHCP server `for DNS addresses`
+Now host after generate Interface ID will contact DHCP server `for DNS addresses`
+
+```mermaid
+sequenceDiagram
+    note left of Host : to all DHCPv6 servers
+    Host->>stateless-DHCPv6: SOLICIT? neigh sol?
+    note right of stateless-DHCPv6 : unicast reply
+    stateless-DHCPv6->>Host: ADVERTISE neigh adv?
+    note left of Host : to all DHCPv6 servers
+    Host->>stateless-DHCPv6: INFORMATION REQUEST what type of address??
+    note right of stateless-DHCPv6 : unicast reply
+    stateless-DHCPv6->>Host: REPLY
+```
+
+
+
+
 ```
 <--- SOLICIT (to all DHCPv6 servers)
 ADVERTISE (unicast) -->
@@ -115,13 +147,9 @@ Now host will contact DHCP server for GUA,DNS addr and `all IPv6 Informations`
 
 > ([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415)|[RFC3633]([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415))) Way to acquire from ISP a prefix for your network
 
-- for DHCPv4 ISP :
-  - ISP deliver `public IPv4` address to home router
-  - DHCPv4 + [RFC1918](https://datatracker.ietf.org/doc/html/rfc1918) allocate private address for private network
-  - `NAT` is used for translation
 - IPv6 has *complete Reachability (ISP Delegation Router-to-host)* 
-- elements involved are: `ISP Delegation Router (ISP-DR)` + `Requestiong Router (RR)` + `host`
-- RR request, as any other client, an IPv6 address for `its ISP facing interface` from ISP-DR (OPT 1,2,3)
+- elements involved are: `ISP Delegation Router (ISP-DR)` + `Requesting Router (RR)` + `host`
+- RR requests, as any other client, an IPv6 address for `its ISP's facing interface` from ISP-DR (OPT 1,2,3)
 - After external interface of RR is ready then the Prefix Delegation Process Starts:
 ```mermaid
 sequenceDiagram
@@ -134,3 +162,8 @@ sequenceDiagram
     note over RR,host : /64 prefix + DNS + Domain name
     note right of host : create Interface ID (EUI-64 | Random)
 ```
+
+- for DHCPv4 ISP-DR :
+  - ISP deliver `public IPv4` address to home router
+  - DHCPv4 + [RFC1918](https://datatracker.ietf.org/doc/html/rfc1918) allocate private address for private network
+  - `NAT` is used for translation
