@@ -6,4 +6,7 @@
 6. easy as that : send always MULTICAST LL and REPLY with UNICAST. NO BROADCAST & NO GUA
 7. tricky, just focus on what is wrong and what is right affermation. then take false ones
 8. ARP == NEIGHBOUR SOL/ADV
-9. 
+9.   .
+10.  only B is the right answer. RS is not part of NDP
+11.  FF + well-known(0) + link local(2) + all devices group (::1)
+12.  multiple A + D

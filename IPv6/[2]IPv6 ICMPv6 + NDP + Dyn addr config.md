@@ -1,9 +1,16 @@
 # ICMPv6
 
->([wiki](https://it.wikipedia.org/wiki/ICMPv6)|[format](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol_for_IPv6)) following protocol (NDP) `uses five ICMPv6 packets `to performs its functions. 
-> - All defined in the `type` field of the packet (133-137)
+> - `error reporting` and `diagnostic functions`
+> - messages may be calssified as `error ms`(0-127) or `information ms`(128-255)
+> - type of ICMPv6 packet is defined in the `type` field 
+> - `code` field provides additional information
+> - `format` may change based on type of packet
+
+(NDP) `uses five ICMPv6 packets `to performs its functions`(133-137)`
+
 > -	[(ICMPv6) Parameters](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml)
 > - [RFC 4443](https://datatracker.ietf.org/doc/html/rfc4443)
+> - [wiki](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol_for_IPv6)
 
 # IPv6 Dynamic Address Configuration
 
@@ -20,6 +27,8 @@ given IPv6 address an host want to know the related `mac of its neighbours` and 
 		- every time someone wants to reach him they just send a Neighbour Sollicitation to its Multicast Group 
 	- `Unicast Request` just to verify if host is reachable or not
 - (`136`)Neighbour Advertisement Message: answer to Neighbour Sollicitation message
+
+> When a host connects to a new network, It sends a `Neighbour Solicitation` with multicast destination
 
 Respectively in IPv4 we have:
 - ARP Request/Reply messages
