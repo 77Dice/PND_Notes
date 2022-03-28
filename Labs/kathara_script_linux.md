@@ -48,8 +48,40 @@ ip l
 ```
 ...
 ```
-
-
-
-
 all elements not related to LABS 
+
+
+
+
+# script 
+
+```bash
+sudo ip link del veth1 type veth
+sudo ip link add veth1 type veth
+sudo ip addr flush veth0
+sudo ip addr add [addr/x] dev veth0
+
+# find docker image of local network
+sudo docker network list | grep kathara_[user]-xxxx_[lan]
+                        grep kathara_xxx
+#bridge = xxx
+
+sudo ip link set veth1 master kt-xxxx                        
+
+sudo ip link set veth0 up
+sudo ip link set veth1 up
+
+ip addr show dev veth1
+ip addr show dev veth1
+
+tcpdump -ni veth1 # on host machine  
+# ---listen on veth1
+
+# he already has IPv6 scope address (by default...)
+ping fe80::101%veth0 # on host machine (only local lan)
+
+sudo ip addr add [IPv6Addr/64] dev veth0
+ping -I veth0 2001:db8:cafe:2::10x  # on host machine (all lab is  reachable)
+# ---speak on veth0
+it works...
+
