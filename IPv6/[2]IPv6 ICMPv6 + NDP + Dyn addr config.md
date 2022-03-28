@@ -37,23 +37,22 @@ Respectively in IPv4 we have:
 
 ### Dynamic IPv6 Address Allocation:
 
-In order to obtain `IPv6 Address information` an host need to send a Solicitation to the Router and then It will answer will all possible `available configuration` for that specific network `stateless or stateful`
+In order to obtain `IPv6 Address information` an host need to send a Solicitation to the Router and then It will answer will an `available configuration` for that specific network `SLAAC, stateless or stateful`
+
+
 - (`133`)Router Solicitation Message: Host wants to locate `Routers on attached link` and ask for IPv6 configuration Options available
 - (`134`)Router Advertisement Message: Routers `advertise their presence` periodically or as respond to a Router Solicitation message
  
+> <b>ONLY local Router decides type of configuration used in the network </b>
  
 ```mermaid
 sequenceDiagram
 	Host->>Router: ICMPv6 Router Solicitation
-	note over Host,Router : To all IPv6 Routers, I need IPv6 address information!!
-    Note right of Router: To all IPv6 Devices
-    Note right of Router: Let me tell you possible Options
-	Router->>Host: ICMPv6 Router Solicitation + Options
-	Note over Router,Host: 1. slaac 2. slaac+stateless 3. stateful DHCPv6 
-	Note left of Host: I decide Option x ??? 
-	Note left of Host:  info x iniziare la config?? 
-    
-
+	note over Host,Router : To all IPv6 Routers-->I need IPv6 informations
+	Router->>Host: ICMPv6 Router Advertisement
+	Note over Router,Host: IPv6  configuration Info <--To all IPv6 Devices 
+	Note left of Host: SLAAC : run DAD + create addr
+	Note left of Host: stateful/less : contact DHCPv6
 ```
 
 - (`137`)Redirect message: routers inform hosts of a better first hop router for a destination
@@ -63,8 +62,9 @@ for IPv4 hosts:
 
 ## Stateless Address Autoconfiguration (SLAAC)
 
+
 Available configuration for host sent by Router Advertisement message can be:
-- OPT1: SLAAC - No DHCPv6(default on Cisco Routers): router gives everything (prefix,Def gateway,DNS...) 
+- OPT1: SLAAC - No DHCPv6(default on Cisco Routers): router gives everything (prefix,Def gateway,DNS...) to the host for create its own address
 - OPT2: SLAAC + Stateless DHCPv6 for DNS address: router gives info but DNS addresses can be found only `from DHCPv6`
 	- OPT 1-2 are `stateless` configuration, then DHCPv6 does `not maintain state` of addresses
 	- No full knowledge of the network state or list of addresses used
@@ -81,6 +81,7 @@ to: 		FF02::1 all-IPv6 devices (multicast addr)
 From:		FE80::1 default Gateway  (Link-Local addr)
 Prefix:		2001:DB8:CAFE:1::	 (of this network)
 Prefix-length:	/64
++ DNS info
 ```
 Local Host now knows:
 ```
@@ -102,13 +103,14 @@ Now host can compute its Interface ID using either `EUI-64` or `Random 64-bit va
 
 > ([link](https://medium.com/networks-security/ipv6-duplicate-address-detection-dad-f83b20cb89aa)|[DAD-attacks](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0214518#:~:text=Duplicate%20Address%20Detection%20(DAD)%20refers,to%20an%20interface%20%5B13%5D.)) SLAAC is stateless then no entity is maintaining a state of addresses used or any sort of address-to-device mapping
 
-> Then how can we guarantee unique addresses?
+> Then how can we guarantee unique addresses? (LL or GUA)
 
+- Used by `every host` with SLAAC
 - Used `Before assign` IPv6 address to an interface
-- Host send Neighbour Solicitation with its IPv6 Address to : the `solicited-node` multicast group :
-  - based on the IPv6 Address `it plans to assign using SLAAC`
-	- if someone respond ==> It's a Duplicate!
-	- If no one respond ==> Unique Address!!
+- Host send Neighbour Solicitation to the `solicited-node` multicast group :
+    - based on the IPv6 Address `it plans to assign using SLAAC` OPT 1,2
+    	- if someone respond ==> It's a Duplicate!
+    	- If no one respond ==> Unique Address!!
 
 > ([Switch-Wiki](https://techhub.hpe.com/eginfolib/networking/docs/switches/WB/16-01/5200-0135_wb_2920_ipv6/content/ch01s11.html)) with Cisco switches if DAD service is active in order to check what addresses they are using or not :
 
@@ -131,16 +133,19 @@ Other configuration flag 	   == 1
 ```
 Now host after generate Interface ID will contact DHCP server `for DNS addresses`
 
+> ([wiki](https://en.wikipedia.org/wiki/DHCPv6)) not ICMPv6 but `DHCPv6 Message type`  ([RFC 8415](https://datatracker.ietf.org/doc/html/rfc8415))
+
 ```mermaid
 sequenceDiagram
-    note left of Host : to all DHCPv6 servers
-    Host->>stateless-DHCPv6: SOLICIT? neigh sol?
-    note right of stateless-DHCPv6 : unicast reply
-    stateless-DHCPv6->>Host: ADVERTISE neigh adv?
-    note left of Host : to all DHCPv6 servers
-    Host->>stateless-DHCPv6: INFORMATION REQUEST what type of address??
-    note right of stateless-DHCPv6 : unicast reply
-    stateless-DHCPv6->>Host: REPLY
+    Host->>stateless-DHCPv6: (1)SOLICIT
+	note over Host,stateless-DHCPv6 : TO ALL DHCPv6 servers
+    stateless-DHCPv6->>Host: (2)ADVERTISE
+	note over Host,stateless-DHCPv6 : Unicast reply
+    Host->>stateless-DHCPv6: (3)REQUEST 
+	note over Host,stateless-DHCPv6 : TO ALL DHCPv6 servers
+    stateless-DHCPv6->>Host: (7)REPLY
+	note over Host,stateless-DHCPv6 : Unicast reply
+    
 ```
 
 
@@ -177,6 +182,9 @@ Now host will contact DHCP server for GUA,DNS addr and `all IPv6 Informations`
 - elements involved are: `ISP Delegation Router (ISP-DR)` + `Requesting Router (RR)` + `host`
 - RR requests, as any other client, an IPv6 address for `its ISP's facing interface` from ISP-DR (OPT 1,2,3)
 - After external interface of RR is ready then the Prefix Delegation Process Starts:
+
+> [wiki???](https://en.wikipedia.org/wiki/Prefix_delegation) what types of pachets???
+
 ```mermaid
 sequenceDiagram
 	ISP-DR->RR : RR addr config
@@ -186,7 +194,8 @@ sequenceDiagram
     note over ISP-DR,RR : prefix + DNS + Domain name
     RR->>host : Router Advertisement           
     note over RR,host : /64 prefix + DNS + Domain name
-    note right of host : create Interface ID (EUI-64 | Random)
+    note right of host : create Interface ID
+	note right of host :  (EUI-64 | Random)
 ```
 
 - for DHCPv4 ISP-DR :
