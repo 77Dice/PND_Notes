@@ -100,14 +100,22 @@ Now host can compute its Interface ID using either `EUI-64` or `Random 64-bit va
 
 ### Duplicate Address Detection(DAD):
 
->([Wiki](https://techhub.hpe.com/eginfolib/networking/docs/switches/WB/16-01/5200-0135_wb_2920_ipv6/content/ch01s11.html)) SLAAC is stateless then no entity is maintaining a state of addresses used or any sort of address-to-device mapping
+> ([link](https://medium.com/networks-security/ipv6-duplicate-address-detection-dad-f83b20cb89aa)|[DAD-attacks](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0214518#:~:text=Duplicate%20Address%20Detection%20(DAD)%20refers,to%20an%20interface%20%5B13%5D.)) SLAAC is stateless then no entity is maintaining a state of addresses used or any sort of address-to-device mapping
 
 > Then how can we guarantee unique addresses?
 
-- Host send Neighbour Solicitation with its IPv6 Address to the All-Nodes multicast address `(ff02::1)`
+- Used `Before assign` IPv6 address to an interface
+- Host send Neighbour Solicitation with its IPv6 Address to : the `solicited-node` multicast group :
+  - based on the IPv6 Address `it plans to assign using SLAAC`
 	- if someone respond ==> It's a Duplicate!
 	- If no one respond ==> Unique Address!!
-	
+
+> ([Switch-Wiki](https://techhub.hpe.com/eginfolib/networking/docs/switches/WB/16-01/5200-0135_wb_2920_ipv6/content/ch01s11.html)) with Cisco switches if DAD service is active in order to check what addresses they are using or not :
+
+- the cisco Switch will send a Neighbour Solicitation to the All-Nodes multicast address `(ff02::1)` and retrieve every *link-local* address in use
+
+
+
 ### SLAAC + Stateless DHCPv6:
 
 In this case host *has its own address(stateless)* and *default gateway* but it needs a DNS server. 
