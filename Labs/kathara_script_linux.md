@@ -22,6 +22,12 @@ sudo ip addr flush vethy    # create host side interface
 sudo ip addr add 192.168.199.1/24 dev vethy 
 ```
 
+# script analysis
+```bash
+#some bash
+```
+
+
 # find link to docketr image
 
 > we need to find the image of docker related to the `colision domain` we want to connect : there exists one for each local network with the `same name` as the one `in the .lab file`
