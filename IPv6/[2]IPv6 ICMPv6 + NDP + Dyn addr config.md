@@ -43,16 +43,16 @@ In order to obtain `IPv6 Address information` an host need to send a Solicitatio
 - (`133`)Router Solicitation Message: Host wants to locate `Routers on attached link` and ask for IPv6 configuration Options available
 - (`134`)Router Advertisement Message: Routers `advertise their presence` periodically or as respond to a Router Solicitation message
  
-> <b>ONLY local Router decides type of configuration used in the network </b>
+> ***ONLY local Router decides type of configuration used in the network***
  
 ```mermaid
 sequenceDiagram
 	Host->>Router: ICMPv6 Router Solicitation
-	note over Host,Router : To all IPv6 Routers-->I need IPv6 informations
+	note over Host,Router : To all IPv6 Routers--> I need IPv6 informations
 	Router->>Host: ICMPv6 Router Advertisement
-	Note over Router,Host: IPv6  configuration Info <--To all IPv6 Devices 
-	Note left of Host: SLAAC : run DAD + create addr
-	Note left of Host: stateful/less : contact DHCPv6
+	Note over Router,Host: IPv6  configuration Info <-- To all IPv6 Devices 
+	note over Host : (SLAAC) run DAD + create addr
+	note over Host : (stateful/less) contact DHCPv6
 ```
 
 - (`137`)Redirect message: routers inform hosts of a better first hop router for a destination
@@ -105,16 +105,15 @@ Now host can compute its Interface ID using either `EUI-64` or `Random 64-bit va
 
 > Then how can we guarantee unique addresses? (LL or GUA)
 
-- Used by `every host` with SLAAC
-- Used `Before assign` IPv6 address to an interface
+- Used by `every host` with SLAAC `Before assign` IPv6 address to an interface
 - Host send Neighbour Solicitation to the `solicited-node` multicast group :
-    - based on the IPv6 Address `it plans to assign using SLAAC` OPT 1,2
+    - based on the IPv6 Address `host plans to assign using SLAAC` OPT 1,2
     	- if someone respond ==> It's a Duplicate!
     	- If no one respond ==> Unique Address!!
 
 > ([Switch-Wiki](https://techhub.hpe.com/eginfolib/networking/docs/switches/WB/16-01/5200-0135_wb_2920_ipv6/content/ch01s11.html)) with Cisco switches if DAD service is active in order to check what addresses they are using or not :
 
-- the cisco Switch will send a Neighbour Solicitation to the All-Nodes multicast address `(ff02::1)` and retrieve every *link-local* address in use
+- the cisco Switch will send a Neighbour Solicitation to the All-Nodes multicast address `(ff02::1)` and retrieve every *link-local* address in use 
 
 
 
@@ -133,7 +132,7 @@ Other configuration flag 	   == 1
 ```
 Now host after generate Interface ID will contact DHCP server `for DNS addresses`
 
-> ([wiki](https://en.wikipedia.org/wiki/DHCPv6)) not ICMPv6 but `DHCPv6 Message type`  ([RFC 8415](https://datatracker.ietf.org/doc/html/rfc8415))
+> ([DHCPv6](https://en.wikipedia.org/wiki/DHCPv6)|[RFC 8415](https://datatracker.ietf.org/doc/html/rfc8415)) `not ICMPv6` but `DHCPv6 Message type`  
 
 ```mermaid
 sequenceDiagram
@@ -148,18 +147,16 @@ sequenceDiagram
     
 ```
 
-
-
-
 ```
-<--- SOLICIT (to all DHCPv6 servers)
-ADVERTISE (unicast) -->
-<--- INFORMATION REQUEST (to all DHCPv6 servers)
-REPLY (unicast) -->
+SOLICIT ---> 			(to all DHCPv6 servers)
+<--- ADVERTISE 			(unicast)
+INFORMATION REQUEST --->(to all DHCPv6 servers)
+<--- REPLY 				(unicast) 
 ---------------------------------
 DNS: 2001:DB8:CAFE:1::99
 Domain Name: cafe.com
 ```
+
 ### Stateful DHCPv6:
 
 In this case host is *only* using the *default Gateway address* from RA and it need to contact a stateful DHCPv6 server for all IPv6 Information. Local Router will respond with `Option 3 - RA Message`:
@@ -176,27 +173,32 @@ Now host will contact DHCP server for GUA,DNS addr and `all IPv6 Informations`
 
 ## DHCPv6 Prefix Delegation Process
 
-> ([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415)|[RFC3633]([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415))) Way to acquire from ISP a prefix for your network
+> ([Prefix Delegation Wiki](https://en.wikipedia.org/wiki/Prefix_delegation))-([DHCPv6 message exchange](https://www.alliedtelesis.com/sites/default/files/documents/configuration-guides/dhcpv6_feature_overview_guide.pdf)) slide 14
+
+>  Way to acquire from ISP a prefix for your network
 
 - IPv6 has *complete Reachability (ISP Delegation Router-to-host)* 
-- elements involved are: `ISP Delegation Router (ISP-DR)` + `Requesting Router (RR)` + `host`
-- RR requests, as any other client, an IPv6 address for `its ISP's facing interface` from ISP-DR (OPT 1,2,3)
-- After external interface of RR is ready then the Prefix Delegation Process Starts:
-
-> [wiki???](https://en.wikipedia.org/wiki/Prefix_delegation) what types of pachets???
+- elements involved are: `ISP Delegation Router (ISP-DR)` + `Requesting Router (RR)` + `end-host`
+  1. RR requests, as any other client, an IPv6 address for `its ISP's facing interface` from ISP-DR (OPT 1,2,3)
+  2. After external interface of RR is ready then the Prefix Delegation Process Starts	 
+  3. any host can ask IPv6 information to RR for auto-configure IPv6 Address
 
 ```mermaid
 sequenceDiagram
-	ISP-DR->RR : RR addr config
-	RR->>ISP-DR : DHCPv6-PD  REQUEST
-    ISP-DR->>RR : DHCPv6-PD REPLY
-    note over ISP-DR,RR : separate prefix for inner network/LAN
-    note over ISP-DR,RR : prefix + DNS + Domain name
-    RR->>host : Router Advertisement           
+	ISP-DR-->RR : RR addr config
+	note over ISP-DR,RR : gain IPv6 information for RR
+	RR->>ISP-DR : DHCPv6-PD (3)REQUEST
+    ISP-DR->>RR : DHCPv6-PD (7)REPLY
+    note over ISP-DR,RR : send prefix for inner network/LAN
+    note over RR : [prefix + DNS + Domain name]
+	host->>RR : Router Solicitation(133)
+    RR->>host : Router Advertisement(134)           
     note over RR,host : /64 prefix + DNS + Domain name
-    note right of host : create Interface ID
-	note right of host :  (EUI-64 | Random)
+    note over host : create Interface ID
+	note over host :  (EUI-64 | Random)	
 ```
+
+> ([RFC8415](https://datatracker.ietf.org/doc/html/rfc8415)|[RFC3633](https://datatracker.ietf.org/doc/html/rfc3633))
 
 - for DHCPv4 ISP-DR :
   - ISP deliver `public IPv4` address to home router
