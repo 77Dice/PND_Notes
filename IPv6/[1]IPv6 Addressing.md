@@ -112,9 +112,18 @@ FF00:: --> 1111 1111 0000 0000:: ==> FFFF:: → 1111 1111 1111 1111::
 --..       ---- ---- .... ....       --..     ---- ---- .... ....
 ```
 > 2. Solicited-Node as `FF02::1:FF00:0000/104` 
+```bash
+fe80::2aa:ff:fe28:9c5a/104                  IPv6 unicast/anycast address (compressed notation)
+               -- ----                      the least-significant 24-bits
+ff02::1:ff00:0/104                          Solicited-Node multicast address prefix
+----  - --                                  The first 104 bits
+ff02::1:ff28:9c5a                           Solicited-Node multicast address (compressed notation)
+          ** ****
+```
   - *generated from `least-significant 24-bits` of Uni/Anycast address*
-  - used for the Neighbor Discovery Protocol(NDP)
-  -  [Wiki to Solicited-node Address Example](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)
+  - used in the Neighbor Discovery Protocol(NDP) for `Duplicate Address Detection(DAD)`
+  - <em>" The Solicited-Node multicast addresses are generated from the host's IPv6 unicast or anycast address, and `each interface must have` a Solicited-Node multicast address associated with it "</em>
+    -  [Wiki to Solicited-node Address Example](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)
 
 ### scope
 
