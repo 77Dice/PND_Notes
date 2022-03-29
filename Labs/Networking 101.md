@@ -2,10 +2,7 @@
 
 ## IProute2
 
-> [iproute2 Howto Wiki](http://www.policyrouting.org/iproute2.doc.html) offers complete low-level network configuration 
-
-- traceroute\ping a.b.c.d  | test if reachable      
-
+> ([iproute2 Howto Wiki](http://www.policyrouting.org/iproute2.doc.html)) offers complete low-level network configuration 
 
 | command | description | 
 | --| --|
@@ -16,34 +13,33 @@
 |ip addr [add\del] a.b.c.d/m dev ethx  | add/remove ip address |			    
 |ip addr flush [dev ethx]  | remove any assigned address |
 |ip addr replace a.b.c.d/m dev ethx  | instead of flush+add during startup   |
-| --|--|
 |ip route \ ip r [list\flush]  | list\flush routing table |	 
 |ip route [add\del] a.b.c.d/m via [next_hop]  | add/del route by next hop|			    
 |ip route [add\del] default via a.b.c.d  | add/del default route|
 |watch ip r  | real-time populated routing table     |
-			    
-			ip route (add|del) a.b.c.d/m dev ethx  | Direct forwarding     
-			    
-			ip neigh (flush|show) [dev ethx]  | show/flush ARP table     			
-			    
-			   
-			ifconfig commands  | for legacy systems     
-			    
-			   
-			ifconfig (-a) [ethx]  | display all active interfaces and details     
-			    
-			ifup | ifconfig ethx up  | enable ethx     
-			    
-			ifdown | ifconfig ethx down  | disable ethx     
-			    
-			ifconfig ethx a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface     
-			    
-			ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address     
-			    
-			route add default gw a.b.c.d  | set default route gateway     
-			    
-	
+|ip route [add\del] a.b.c.d/m dev ethx  | Direct forwarding |
+|ip neigh [flush\show] dev ethx  | show/flush ARP table |
 
+| ifconfig commands  | for legacy systems     |
+| -- |-- |
+| ifconfig (-a) [ethx]  | display all active interfaces and details |
+|ifconfig \ [ifup\ifdown] $eth_x$  [up\down]  | enable\disable $eth_x$   |	
+|ifconfig $eth_x$ a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface |    
+| ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address |
+| route add default gw a.b.c.d  | set default route gateway  |
+
+| IPv6 Only | --|
+| --| --| 
+| route -6 | show IPv6 routing table |   
+| traceroute\ping a.b.c.d  | test if reachable  |
+
+## kathara files
+
+ - /shared.startup (shell commands for all vm inside kathara environment)
+ - /vm.startup (shell commands executed booting specific vm)
+ -  /lab.conf (physical topology and collision domain definition)
+ -  /vm/etc/network/interfaces (network interfaces file) static and DHCP IP addressing
+ - /etc/resolv.conf (contains DNS IP addresses)
 ## How configure topology of networks
 
 > [Debian Network Setup](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html) | [NetworkManager_cli](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
