@@ -53,13 +53,21 @@
 
 ### DHCP3 setup
 
-> It's a client-server mechanism where the Server has a pool of IP addresses
-to distribute together with the network configuration
-
-> Clients requesting a new IP address receive
+> It's a client-server mechanism implemented by deamon `dhcpd` where the Server has a pool of IP addresses
+to distribute together with the network configuration. Clients requesting a new IP address receive
 a proposal and accept it, once accepted the IP is reserved for a "leasing time"
 
-`
+[wiki](https://it.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol)
+DHCP procedure:
+ Host broadcasts "DHCP Discover"
+ DHCP Srv. responds with "DHCP oer"
+* yiaddr: (oered) IP address
+ Host request IP addr "DHCP request"
+ DHCP Srv. sends addr "DHCP ACK"
+
+
+
+
 - kathara files..
 - net traffic monitoring
 - script x connect host machine

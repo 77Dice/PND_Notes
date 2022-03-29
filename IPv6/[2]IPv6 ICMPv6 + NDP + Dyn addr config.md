@@ -58,7 +58,7 @@ sequenceDiagram
 - (`137`)Redirect message: routers inform hosts of a better first hop router for a destination
 
 for IPv4 hosts:
-- DHCP or static allocation 
+- DHCPv4 or static allocation 
 
 ## Stateless Address Autoconfiguration (SLAAC)
 
@@ -105,7 +105,7 @@ Now host can compute its Interface ID using either `EUI-64` or `Random 64-bit va
 
 > Then how can we guarantee unique addresses? (LL or GUA)
 
-- Used by `every host` with SLAAC `Before assign` IPv6 address to an interface
+- Used by `every host` using SLAAC `Before assign` IPv6 address to an interface
 - Host send Neighbour Solicitation to the `solicited-node` multicast group :
     - based on the IPv6 Address `host plans to assign using SLAAC` OPT 1,2
     	- if someone respond ==> It's a Duplicate!
