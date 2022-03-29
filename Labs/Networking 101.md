@@ -35,11 +35,12 @@
 
 ## kathara files
 
- - /shared.startup (shell commands for all vm inside kathara environment)
- - /vm.startup (shell commands executed booting specific vm)
- -  /lab.conf (physical topology and collision domain definition)
- -  /vm/etc/network/interfaces (network interfaces file) static and DHCP IP addressing
- - /etc/resolv.conf (contains DNS IP addresses)
+> - /shared.startup (shell commands for all vm inside kathara lab)
+> - /vm.startup (booting command for specific vm)
+> - /lab.conf (physical topology and collision domain definition)
+> - /vm/etc/network/interfaces (network interfaces file for static IP config)
+> - /etc/resolv.conf (contains DNS IP addresses)
+
 ## How configure topology of networks
 
 > [Debian Network Setup](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html) | [NetworkManager_cli](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
@@ -50,8 +51,15 @@
   - The IP address of its Default Gateway (device in local network `able to access` the Distribution layer)
   - The IP address of a DNS (a remote server `able to translate` human intelligible names to IP addresses)
 
+### DHCP3 setup
 
+> It's a client-server mechanism where the Server has a pool of IP addresses
+to distribute together with the network configuration
 
+> Clients requesting a new IP address receive
+a proposal and accept it, once accepted the IP is reserved for a "leasing time"
+
+`
 - kathara files..
 - net traffic monitoring
 - script x connect host machine
