@@ -57,6 +57,11 @@
 
 > ([wiki](https://it.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol)) It's a client-server mechanism implemented by deamon `dhcpd` where the Server has a `pool` of IP addresses to distribute together with the network configuration
 
+
+> ![picture 1](../images/1a9b492a3fa704f1822eaf78a1b313c36b34bfdf621602f00273fe8d385cda93.png)  <p align = "center" > 	<em> DHCP address exchange </em> </p>
+
+
+
 >  Clients requesting a new IP address receive a proposal and accept it, once accepted the IP is `reserved` for a "leasing time"
 
 - DHCP procedure uses `udp` protocol on port 67(srv) / 68(client):
@@ -91,7 +96,9 @@ sudo ip addr add [addr/x] dev veth0
 # find docker image of local network
 sudo docker network list | grep kathara_[user]-xxxx_[lan]
                          | grep kathara_xxx
+
 #bridge = xxx
+brctl show | grep kt- # find right virtual-bridge to connect
 
 sudo ip link set veth1 master kt-xxxx                        
 
@@ -112,14 +119,69 @@ ip addr show dev veth1
 ping -I veth0 2001:db8:cafe:2::10x  # (all lab is reachable)
 
 it works...
+./connect-lab .sh (a .b. c.d /x) ( lan_name ) # connect to broadcast domain with given IP address
 ```
 
 ## Network Traffic Monitoring
 
+> Packets flow in the network, to capture them use a `network traffic dump tool` like:
+
+- dumpcap/wireshark/tcpdump
+-  wireshark and tcpdump can `visualize, save and analyze captured packets`
+-  [Promiscuous/monitor mode](https://en.wikipedia.org/wiki/Promiscuous_mode): NIC/WNIC pass all the observable traffic without discrimination to the CPU
+- Capturing all the packets can be messy:`use filters!` to focus on specific packets, connection or activity patterns
+- `Display filters`: inspect only packets you want to analyse and display packets `matching the filters`, packets are `not discarded or lost` (wireshark)
+- `Capture filters`: Limit the traffic captured and analysed. packets not captured `are lost!`(tcpdump)
+
+### How capture Network traffic?
+
+- Promiscuous mode (can be limited by switches)
+- Physical tap interface (directly to LAN cable)
+- Port mirroring on a managed switch:
+  - Usually only destination port receive packets:`SPAN` send all traffic to switch `analyser/sniffer`
+- Aggressive approaches for sniffing:
+  - ARP cache poisoning (spoofing):steal IP addresses using Unsolicited ARP replies ([ettercap](https://www.ettercap-project.org/),cain¿abel)
+  - MAC flooding: fill the CAM Table of switch to make it acting as a hub (macof)
+  - DHCP redirection: steal(exhausts) IP addresses from the pool, then pretend to be the default GW with new DHCP requests
+  - redirection and interception of ICMP packets
 
 
-- kathara files..
-- net traffic monitoring
-- script x connect host machine
+> ![picture 2](../images/fcc0dc172e7049812e32d1c29dc604dd07361106b90239ac458886aa1a949aa5.png)<p align = "center" > 	<em> SPAN-RAP </em> </p>
+
+
+### How prevent packet capture?
+
+> methods implemented in switches
+
+- `Dynamic address inspection(DAI)`: validates APR packets
+- `IP-to-MAC address binding inspection`: drop invalid packets
+- `DHCP snooping`: distinguish between trusted and untrusted ports and uses a `database` of IP-to-MAC;
+  - ports that show rogue activity can be `automatically disabled`
+
+## Packet inspection with tcpdump
+
+> Dummy example: we connect Host machine using script, then we use `netcat` to create a UDP/TCP connection between 2 host and capture traffic with [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html) finally visualize it on host machine with wireshark(file.pcap)
+
+|netcat | . | 
+|--|--|
+|nc (-u) [ip-addr] [port] | TCP/UDP connection through port |
+|nc (-u) -l -p [port] | Listen on port |
+
+> when capturing on vm remember to save file.pcap on */shared* folder
+
+| tcpdump | (on listener Host) |
+|--|--|
+| (ctrl+z) + | (bg) |
+| tcpdump -ni [ethx/any] -w /shared/file.pcap | (-n) not resolve DNS (-i) define interface (-w) write on |
+
+|ports check | . |
+|--|--|
+|ss|TCP sockets & established connections |
+| (-l) listening sockets (-u -t -x) udp,tcp,unix | . |
+| lsof -P -n -i(IPv4) | info about files opened by proceses |
+| netstat | connections states with localhost |
+| (-ltn) listening,tcp,no resolve | | 
+
+# ex1 
 
 ex 1...
