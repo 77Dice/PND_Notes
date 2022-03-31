@@ -1,0 +1,5 @@
+
+ip addr replace 172.16.0.18/29 dev eth0 #internal
+ip addr replace 172.16.0.14/29 dev eth1 #lan2
+ip route add default via 172.16.0.22  #go to r0
+echo "nameserver 8.8.8.8" > /etc/resolv.conf

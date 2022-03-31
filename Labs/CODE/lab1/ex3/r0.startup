@@ -1,0 +1,6 @@
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+
+ip addr replace 172.16.0.22/29 dev eth0 #internal
+ip route add 172.16.0.0/29 via 172.16.0.17 #to lan 1 for REPLY!!
+ip route add 172.16.0.8/29 via 172.16.0.18 #to lan 2 for REPLY!!
+echo "nameserver 8.8.8.8" > /etc/resolv.conf

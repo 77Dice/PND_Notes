@@ -182,10 +182,42 @@ it works...
 | netstat | connections states with localhost |
 | (-ltn) listening,tcp,no resolve | | 
 
-# ex1 
+### ex1 
 
-ex 1...
-adeso ci siamo , posso accedere....
-ed ho modificato, 
-il fatto e' che devo sempre immettere quel token e non me lo fa in autaomatico...
+> GOAL: Manually configure pc1-3 in order to be in the same network than r1 as 192.168.100.30/29
 
+- Configure pc1 using the `interface` file; pc2 using iproute2; pc3 using ifconfig (on startup files)
+- add DNS server + default gateway as r1 + verify connectivity within network and internet
+
+### ex2
+
+> GOAL: Configure r1,pc1,pc2 in order to receive their networking configuration from a DHCP server(r1);
+DNS is the server used by host machine; gw and DHCP server is r1 using udhcpd (apt install udhcpd)
+
+- configure pc1 using `interface` file and pc2 using `dhclient` command (on shell after startup)
+
+### ex3
+
+> GOAL: assign IP addresses + configure the network in order to be reachable and assign subnetworks
+using address:172.16.0.0/16
+
+- The address can be split in 3 subnetworks of `6 hosts and 3bits each:`
+	- 172.16.0.0/29 .0->.7 (lan1)
+	- 172.16.0.8/29 .8->.15 (lan2)
+	- 172.16.0.0/29 .16->.23 (internal)
+	
+### ex4
+
+> Activity1: Connect to the kathara lab, get http page and capture packets using
+
+1. *./connect-lab.sh 10.0.0.x/24*
+2. *tcpdump -ni any -w /shared/capture.pcap* (on pc1)
+3. wget http://10.0.0.1/da|ba.php (on host machine)
+4. analyse and compare files with wireshark
+
+> Activity2: Connect to open ftp/sftp server and use filters to search for user/password
+
+1. *tcpdump -ni any -w capture.pcap*
+2. *ftp test.rebex.net* (demo:password)
+3. *sftp demo@test.rebex.net* (demo:password)
+4. analyse -> sftp is encrypted!!

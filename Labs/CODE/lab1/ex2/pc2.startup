@@ -1,0 +1,4 @@
+ip addr flush eth0
+umount /etc/resolv.conf
+dhclient eth0 # ask for IP Information
+

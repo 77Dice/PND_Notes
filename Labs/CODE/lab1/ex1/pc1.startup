@@ -1,0 +1,11 @@
+ip addr flush eth0
+# Bring up all the interfaces defined with auto in /etc /
+ifup -a
+# Print names of all interfaces specified with the auto keyword
+ifquery -l
+#DEPRECATED !!
+/ etc / init .d / networking restart  
+network / interfaces
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+
