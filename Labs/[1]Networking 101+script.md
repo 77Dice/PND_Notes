@@ -98,7 +98,7 @@ sudo docker network list | grep kathara_[user]-xxxx_[lan]
                          | grep kathara_xxx
 
 #bridge = xxx
-brctl show | grep kt- # find right virtual-bridge to connect
+brctl show | grep -o 'kt-[a-z0-9]'  # find right virtual-bridge to connect
 
 sudo ip link set veth1 master kt-xxxx                        
 
@@ -167,7 +167,7 @@ it works...
 |nc (-u) [ip-addr] [port] | TCP/UDP connection through port |
 |nc (-u) -l -p [port] | Listen on port |
 
-> when capturing on vm remember to save file.pcap on */shared* folder
+> when capturing on vm remember to save file.pcap on */shared* folder 
 
 | tcpdump | (on listener Host) |
 |--|--|
@@ -181,6 +181,12 @@ it works...
 | lsof -P -n -i(IPv4) | info about files opened by proceses |
 | netstat | connections states with localhost |
 | (-ltn) listening,tcp,no resolve | | 
+
+## shared folder
+
+> how `enable` hostHome folder?  \
+> *home/user/.conf/kathara.conf* \
+>  "hosthome_mount" : true --> `shared` folder will be availabe for exchange of files...
 
 ### ex1 
 
