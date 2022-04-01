@@ -28,11 +28,6 @@
 | ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address |
 | route add default gw a.b.c.d  | set default route gateway  |
 
-| IPv6 Only | --|
-| --| --| 
-| route -6 | show IPv6 routing table |   
-| traceroute\ping a.b.c.d  | test if reachable  |
-
 ## kathara files
 
 > - /shared.startup (shell commands for all vm inside kathara lab)
