@@ -1,0 +1,7 @@
+dpkg -i radvd_1%3a2.15-2_amd64.deb
+ifup eth0
+ifup eth1
+
+## start on runtime for capture packets ; before that : tcpdump -ni ethx -w /shared/capture.pcap
+#radvd -m logfile -l /var/log/radvd.log
+

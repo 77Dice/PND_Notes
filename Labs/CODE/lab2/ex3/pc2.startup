@@ -1,0 +1,6 @@
+
+ip addr flush eth0
+umount /etc/resolv.conf
+
+# start DHCPv4 client
+dhclient eth0

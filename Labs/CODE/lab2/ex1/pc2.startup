@@ -1,0 +1,10 @@
+# IP command IPV6 Example
+
+ip addr flush eth0
+
+ip -6 addr add scope link fe80::102/64 dev eth0 # OK  SCOPE LINK IS IMPORTANT!!!
+ip -6 addr add 2001:db8:cafe:1::102/64 dev eth0 # OK
+ip -6 route add default via fe80::1 dev eth0 # OK also without -6 
+
+# ping -6 fe80::10x%eth0   VALID FOR LL ADDRESSES ONLY!!!
+# ping -6 fe80::10x -I eth0 VALID FOR GUA + LL ADDRESSES !!!

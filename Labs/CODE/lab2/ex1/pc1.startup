@@ -1,0 +1,9 @@
+ip addr flush eth0
+## only for interface configuration 
+ifup -a
+ifquery -l 
+
+#ip -6 route add default via fe80::1 dev eth0 # route add on IPv6 
+ ip -6 route add 2001:db8:cafe:2::/64 via fe80::1 dev eth0 # WORKING!!!
+# route -6  for showing routing table  ONLY THIS WORKS.... need to check lex rec.
+# wiki https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch07.html 

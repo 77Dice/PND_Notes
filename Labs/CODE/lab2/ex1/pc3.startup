@@ -1,0 +1,9 @@
+# LEGACY IPV6 address example 
+/etc/init.d/networking restart
+ip addr flush eth0
+
+ifconfig eth0 inet6 add fe80::103/64
+ifconfig eth0 inet6 add 2001:DB8:CAFE:2::103/64
+route -A inet6 add default gw fe80::1 dev eth0
+
+# route -A inet6 add 2001:db8:cafe:1::/64 dev eth0  WORKING!!!
