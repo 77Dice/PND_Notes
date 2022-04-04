@@ -1,3 +1,7 @@
+# References
+
+> [HOWTO_IPv6](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/index.html)
+
 # Privileges
 
 1. enable IPv6 on kathara settings
@@ -16,7 +20,7 @@ xterm -e bash -c "kathara connect r1" &
 
 # IPv6 static configuration
 
-> ([interfaces MAN Page](https://manpages.debian.org/stretch/ifupdown/interfaces.5.en.html)) we can configure both GUA and Link local addresses just adding `inet6` inside *pcx/etc/network/interfaces*
+> ([interfaces man_Page](https://manpages.debian.org/stretch/ifupdown/interfaces.5.en.html)) we can configure both GUA and Link local addresses just adding `inet6` inside *pcx/etc/network/interfaces*
 ```bash
 ## remember tabs!!
 auto eth0
@@ -146,98 +150,138 @@ ifup eth1
 dpkg -i radvd_1%3a2.15-2_amd64.deb
 radvd -m logfile -l /var/log/radvd.log
 ```
+
 # SLAAC + DHCPv6 Stateless Configuration
 
-1. router as before : static
-   1. inoltre `deve avere ::1 su ogni addr` il router 
-   2. posso definire DOMAIN NAME + DNS inside interfaces file
-   3. OKOKOKOKOKOKOKOKOKOK
-2. flags as before : SLAAC + R1 IS STATIC 
-   1. OKOKOKKOKOKOK
-   
-3. adesso devo usare DNSMASQ al posto di RADVD per IPv4+6 (route + DNS + prefix )
-   > [MAN_Page_dnsMasq](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index) :: is a `lightweight` DNS,router advertisement and DHCPv4-v6 server
+## DNSMASQ 
+> ([man_Page](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index)) is a `lightweight` DNS, router advertisement and DHCPv4-6 server
 
-  - first install DNSMASK by pkg
+when starts, DNSMASQ reads configuration options inside ***/etc/dnsmasq.conf*** file
+>  - ([dnsmasq.conf](https://github.com/imp/dnsmasq/blob/master/dnsmasq.conf.example)) :: `for every service of DNSMASQ we have comments and descriptions` 
+>   - to enable an option just uncomment specific row
+
+some available options inside `/etc/dnsmasq.conf` :
 ```bash
-... how install inside startup 
-###okokokokokokok
+# If you don't want dnsmasq to read /etc/resolv.conf or any other
+# file, getting its servers from this file instead (see below), then
+# uncomment this.
+no-resolv
+
+# Add other name servers here, with domain specs if they are for
+# non-public domains.
+server=/localnet/192.168.0.1
+
+# If you want dnsmasq to listen for DHCP and DNS requests only on
+# specified interfaces (and the loopback) give the name of the
+# interface (eg eth0) here.
+# Repeat the line for more than one interface.
+interface=ehtx
+
+# If you want dnsmasq to provide only DNS service on an interface,
+# configure it as shown above, and then use the following line to
+# disable DHCP and TFTP on it.
+no-dhcp-interface=ethy
+
+# Set the domain for dnsmasq. this is optional, but if it is set, it
+# does the following things.
+# 1) Allows DHCP hosts to have fully qualified domain names, as long
+#     as the domain part matches this setting.
+# 2) Sets the "domain" DHCP option thereby potentially setting the
+#    domain of all systems configured by DHCP
+# 3) Provides the domain part for "expand-hosts"
+domain=netsec.local
+
+# Send DHCPv6 option. Note [] around IPv6 addresses.
+dhcp-option=option6:dns-server,[1234::77],[1234::88]
+
+# Send DHCPv6 option for namservers as the machine running 
+# dnsmasq and another.
+dhcp-option=option6:dns-server,[::],[1234::88]
+
+# Uncomment this to enable the integrated DHCP server, you need
+# to supply the range of addresses available for lease and optionally
+# a lease time. If you have more than one network, you will need to
+# repeat this for each network on which you want to supply DHCP
+# service.
+dhcp-range=192.168.0.50,192.168.0.150,12h
+
+# Enable DHCPv6. Note that the prefix-length does not need to be specified
+# and defaults to 64 if missing/
+dhcp-range=1234::2, 1234::500, 64, 12h
+
+# Do stateless DHCP, SLAAC, and generate DNS names for SLAAC addresses
+# from DHCPv4 leases.
+dhcp-range=1234::, ra-stateless, ra-names
+
+# Set the DHCP server to authoritative mode. In this mode it will barge in
+# and take over the lease for any client which broadcasts on the network,
+# whether it has a record of the lease or not. This avoids long timeouts
+# when a machine wakes up on a new network. DO NOT enable this if there's
+# the slightest chance that you might end up accidentally configuring a DHCP
+# server for your campus/company accidentally. The ISC server uses
+# the same option, and this URL provides more information:
+# http://www.isc.org/files/auth.html
+dhcp-authoritative
+
+# Include all files in a directory which end in .conf
+conf-dir=/etc/dnsmasq.d/,*.conf
 ```
-- when starts it read ***/etc/dnsmasq.conf*** if exists
-  - inside there are all explanations and commands to define Autoconfiguration
-  - [example_dnsmasq.conf](https://github.com/imp/dnsmasq/blob/master/dnsmasq.conf.example) : `every row has comment, for every service of DNSMASQ`; 
-    - to enable just uncomment specific row!!
-    - and override it at startup!!!
+usually we `don't modify` this file but instead create a new file : `/etc/dnsmasq.d/,*.conf` were we enable all configuration options we need
+- this folder must be enable inside dnsmasq.conf
+- always check syntax with `$ dnsmasq --test`
+- EXAMPLE of [dnsmasq_Configuration](https://www.tecmint.com/setup-a-dns-dhcp-server-using-dnsmasq-on-centos-rhel/)
 ```bash
-## configuration ????????????  have copy on SAMPLE.conf
-...
+# test configuration file syntax
+dnsmasq --test 
+# start dnsmasq
+dnsmasq -d (debug mode) -k(run as normal) -p(def listening port)
+# restart on the run
+systemctl restart dnsmasq 
 ```
-   - per far partire dnsmasq: 
+
+## Dibbler Client
+
+> ([man_Page](https://manpages.debian.org/testing/dibbler-client/dibbler-client.8.en.html)) is a portable implementation of the `DHCPv6 client`
+
+we configure client inside ***/etc/dibbler/client.conf*** file
+>  - ([DIBBLER-portable guide](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)) :: as for dnsmasq also for dibbler configuration files `for every option we have comments and descriptions` 
+>   - to enable an option just uncomment specific row
+
+general `/etc/dibbler/client.conf` file :
+
 ```bash
-dnsmasq --test #(!=0 if something Wrong)
-dnsmasq -d (debug mode) -k(run as normal)
+# Defaults for dibbler-client.
+# installed at /etc/dibbler/client.conf by the maintainer scripts
 
-## nononononono
-# non parte sulla porta 53... non posso usarlo come DNS server!!
+# 8 (Debug) is most verbose. 7 (Info) is usually the best option
+log-level 7
+
+# To perform stateless (i.e. options only) configuration, uncomment
+# this line below and remove any "ia" keywords from interface definitions
+stateless
+
+iface eth0 {
+# ask for address
+#      ai
+# ask for options
+    option dns-server
+    option domain
+#    option ntp-server
+#    option time-zone
+#    option sip-server
+#    option sip-domain
+#    option nis-server
+#    option nis-domain
+#    option nis+-server
+#    option nis+-domain
+}
 ```
-
-4. adesso devo configurare i Clients per IPv4+6
-    > [DIBBLER](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
-
-### dibbler-client
-
-> ([man_dibbler-Client](https://www.systutorials.com/docs/linux/man/8-dibbler-client/)) is a portable implementation of the `DHCPv6 client` 
-1. we need to download package and install it on host VM
-    ```bash
-    # dibbler-client_1.0.1-1+b1_amd64.deb
-    dpkg -i /shared/dibbler-client*.deb
-    apt install -y dibbler-client
-    ```
-2. we `configure it` by **/pcx/etc/dibbler/client.conf** file
-   ```bash
-   awdwa
-
-   ```
-3. start it
-
- dibber-client start
-
-just follow instructions inside **pcx/etc/dibbler/client.conf
-
-or >> dibbler-client status for information
-
-
-### EX3
-
-> GOAL: to configure the topology to use dynamic IPv6 addresses. You have to use `SLAAC+DHCPv6` to provide GUA addresses: `It is a stateless dynamic addressing`
-
-> we have IPv4 + IPv6 network , 1 client for each version
-1. set flags
-2. set daemons 
-3. set clients 
-  
-You have to properly set up the addresses of r1 and dnmasq
-and to properly set up the pc configurations.
-
-- lan has the subnet 2001:DB8:FEDE:1::/64 and 192.168.100.0/24
-- you can also setup the domain name (es: netsec.local)
-- r1 uses as DNS servers 8.8.8.8 and 2001:4860:4860::8888
- 
-- pc1 and pc2 must obtain the address via SLAAC and the DNS+domain
-  info via stateless DHCPv6
-
-- pc1 has to use dibbler-client
-  -- you can install it using dpkg -i /shared/dibbler-client*
-
-- pc2 has to use dhclient 
-
-- the router has always 1 in the host part of its own address 
-  even in its local-link address.
-
-
-
-
-
+```bash
+# check status
+dibbler-client status
+# start/stop daemon
+dibbler-client start/stop
+```
 
 ### EX1
 
@@ -303,12 +347,63 @@ You should check the sysctl ipv6 settings
    radvd -m logfile -l /var/log/radvd.log
    ```
 
-- route is working and also ping over networks
+- route is working and also ping over networks OKOKOK
 
-# General - references
+### EX3
 
-[HOWTO-GUIDE-IPv6](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/index.html)
+> GOAL: to configure the topology using `SLAAC+DHCPv6` to provide GUA addresses
 
-[IPv6 ROUTES](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch07.html)
+***It is a stateless dynamic addressing***
 
+1. configure router/gw as SLAAC (static) by interfaces file
+   - `::1` on every IPv6 addr
+   - define [domain + DNS] inside interfaces file
+2. flags as SLAAC 
+```bash
+#Router is STATICALLY configured inside interfaces file
+r1[sysctl]="net.ipv6.conf.eth0.autoconf=0"
+...
+pcx[sysctl]="net.ipv6.conf.all.accept_ra=1"
+pcx[sysctl]="net.ipv6.conf.all.addr_gen_mode=0"
+...
+```
+3. use `DNSMASQ` instead of RADVD 
+   - options configured : route + DNS + prefix + IPv4 + stateless
+     1. install it 
+     2. configure ***/etc/dnsmasq.conf*** file:
+        ```bash
+        no-resolv
+        interface=eth0
+        domain=netsec.local
+        server=8.8.8.8
+        server=2001:4860:4860::8888
+        server=/netsec.local/fe80::1
+        #no need for netmask
+        dhcp-range=192.168.100.2,192.168.100.254,12h
+        #default 64
+        dhcp-range=2001:DB8:FEDE:1::, ra-stateless, ra-names
+        dhcp-authoritative
+        ```
+        3.test it
+        ```bash
+        dnsmasq --test
+        ```
+        4.start it !!
 
+4. `DNSMASQ` Clients
+   - pc2 with dhclient (ipv4) 
+   - pc1 uses `DIBBLER-CLIENT`:
+     - configure it and start daemon!
+        ```bash
+        log-level 7
+        stateless
+
+        iface eth0 {
+            option dns-server
+            option domain
+        }
+        ```
+        ```bash
+        dibbler-client start
+        ```
+        
