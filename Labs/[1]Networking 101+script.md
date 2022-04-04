@@ -23,8 +23,8 @@
 | ifconfig commands  | for legacy systems     |
 | -- |-- |
 | ifconfig (-a) [ethx]  | display all active interfaces and details |
-|ifconfig \ [ifup\ifdown] $eth_x$  [up\down]  | enable\disable $eth_x$   |	
-|ifconfig $eth_x$ a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface |    
+|ifconfig \ [ifup\ifdown] ethx  [up\down]  | enable\disable ethx   |	
+|ifconfig ethx a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface |    
 | ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address |
 | route add default gw a.b.c.d  | set default route gateway  |
 

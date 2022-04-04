@@ -16,20 +16,25 @@ xterm -e bash -c "kathara connect r1" &
 
 # IPv6 static configuration
 
-> we can configure both GUA and Link local addresses just adding `inet6` inside *pcx/etc/network/interfaces*
-```
+> ([interfaces MAN Page](https://manpages.debian.org/stretch/ifupdown/interfaces.5.en.html)) we can configure both GUA and Link local addresses just adding `inet6` inside *pcx/etc/network/interfaces*
+```bash
+## remember tabs!!
 auto eth0
 iface eth0 inet6 static
-	address	fe80::101
-	netmask 64
-	gateway fe80::1
-	
+  address fe80::101
+  netmask 64
+  gateway fe80::1
+  dad-attempts 0
+
 iface eth0 inet6 static
-	address	2001:DB8:CAFE:1::101
-	netmask	64
-	gateway	2001:DB8:CAFE:1::1
+  address	2001:DB8:CAFE:1::101
+  netmask	64
+  gateway	2001:DB8:CAFE:1::1
+  dad-attempts 0
+  dns-domain net.local
+  dns-nameservers 2001:4860:4860::8888
 ```
-then we need to manually starts interfaces and define routes inside *pcx.startup*
+then we need to manually enable interfaces inside *pcx.startup*
 ```bash
 ## only for interface configuration 
 ifup -a
@@ -39,35 +44,35 @@ ip -6 route add default via fe80::1 dev eth0
 #ip -6 route add 2001:db8:cafe:2::/64 via fe80::1 dev eth0
 ```
 
-# IPv6 Startup file Configuration
+# IPv6 IpRoute2 Configuration
 
 | ipRoute2 | --|
 | --| --| 
-|ip -6 addr add (ll-GUA)/64 dev $eth_x$| add IPv6 Unicast address|
-|ip -6 addr add `scope link` fe80::1/64 dev $eth_x$ | add Link-local address|
-|ip -6 route add default via (`ll`) dev $eth_x$|add default route via link local|
-|ip -6 route add 2001:db8:cafe:1::/64 dev $eth_x$|add route|
+|ip -6 addr add (ll-GUA)/64 dev ethx| add IPv6 Unicast address|
+|ip -6 addr add `scope link` fe80::1/64 dev ethx | add Link-local address|
+|ip -6 route add default via (`ll`) dev ethx|add default route via link local|
+|ip -6 route add 2001:db8:cafe:1::/64 dev ethx|add route|
 |ip -6 route show | show IPv6 routing table|
 > Default gw `is always a link-local` address. This address is also used for `Router Solicitation-Advertisement`
 
 |ifconfig|--|
 |--|--|
-|ifconfig $eth_x$ inet6 add (ll-GUA)/64| add IPv6 Unicast address |
-|route -A inet6 (add\del) default gw (`ll`) dev $eth_x$| add default route via Link Local|
-|route -A inet6 add 2001:db8:cafe:1::/64 dev $eth_x$| add Route|
+|ifconfig ethx inet6 add (ll-GUA)/64| add IPv6 Unicast address |
+|route -A inet6 (add\del) default gw (`ll`) dev ethx| add default route via Link Local|
+|route -A inet6 add 2001:db8:cafe:1::/64 dev ethx| add Route|
 | route -6 | show IPv6 routing table |
 
 |How ping IPv6||
 |--|--|
 |ping (GUA) | Works!! |
 |ping -6 fe80::10x%ethx | ONLY ONE that works for link local destinations|
-|ping -6 fe80::10x -I $eth_x$|works for GUA + link local|
+|ping -6 fe80::10x -I ethx|works for GUA + link local destinations|
 
 # SLAAC Configuration
 
 ## Network Flags (sysctl)
 
-> ([sysctl-flags](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)) We need to introduce some flags for `low level configuration` inside linux (like windows registers)
+> ([sysctl-flags](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)) flags for `low level configuration` inside linux (like windows registers)
 
 > inside **/proc/sys/`net`/ipv6/conf/(all-$eht_x$)**  we have network flags for IPv6 interfaces configuration
 
@@ -78,10 +83,10 @@ pcx[sysctl]= "net.ipv6.conf.all.(flag_name) = (value)"
 r1[sysctl]= "net.ipv6.conf.all.accept_ra=0"
 ...
 ```
-on *startup file* or on the run only on `privileged mode` :
+on *startup file* only on `privileged mode` :
 ```bash
 sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
-sysctl (path)  ##show flag
+sysctl (path)  ##show flag value
 ```
 |Used Flags| net.ipv6.conf.all.*|
 |--|--|
@@ -113,7 +118,7 @@ sysctl (path)  ##show flag
 
 ## Router Advertisement Daemon
 
-> ([quick-radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the RA-RS exchange of messages
+> ([quick-radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the Autoconfigration via RA-RS messages
 
 - ([radvd.conf](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)) */etc/radvd.conf* file : 
 ```
@@ -144,13 +149,15 @@ radvd -m logfile -l /var/log/radvd.log
 # SLAAC + DHCPv6 Stateless Configuration
 
 1. router as before : static
-   1. 1. inoltre `deve avere ::1 su ogni addr` il router 
-2. flags as before : SLAAC (in questo caso abbiamo sempre bisogno di SLAAC per il prefix)
-3. qui uso DNSMASQ al posto di RADVD
+   1. inoltre `deve avere ::1 su ogni addr` il router 
+   2. posso definire DOMAIN NAME + DNS inside interfaces file
+   3. OKOKOKOKOKOKOKOKOKOK
+2. flags as before : SLAAC + R1 IS STATIC 
+3. adesso devo usare DNSMASQ al posto di RADVD
+4. 
 
 ==> router è `STATIC CONFIGURATION AS SLAAC OPT1` + 
 AGGIUNGO OPZIONI DI DOMAIN NAME + DNS USED (IPV6-V4)
-[MAN PAGE](https://manpages.debian.org/stretch/ifupdown/interfaces.5.en.html)
 
 
 ==> ma va usato RADVD???  `NO VA USATO DNSMASQ AL POSTO SUO`
@@ -163,6 +170,9 @@ AGGIUNGO OPZIONI DI DOMAIN NAME + DNS USED (IPV6-V4)
 ## DNS-MASQ
 
 > ([dnsMasq](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index))  is a `lightweight` DNS,router advertisement and DHCPv4-v6 server
+
+> used for both IP versions COnfigurations + SLAAC( no need for radvd - only set flags as before )
+
 
 > On host side we need to define `clients` like : `dibber-client` or `dhclient` for IPv4
 
