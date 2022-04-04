@@ -81,6 +81,7 @@ r1[sysctl]= "net.ipv6.conf.all.accept_ra=0"
 on *startup file* or on the run only on `privileged mode` :
 ```bash
 sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
+sysctl (path)  ##show flag
 ```
 |Used Flags| net.ipv6.conf.all.*|
 |--|--|
@@ -92,9 +93,11 @@ sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
 |.addr_gen_mode|define `how` link-local and autoconf `addr are generated`|
 |..|0-> EUI-64 (default)|
 |..|1-> DO NOT generate ll + EUI-64 for autoconf addr|
-|..|2-> generate `stable privacy addresses` using stable secret ([RFC7217](https://datatracker.ietf.org/doc/html/rfc7217))|
+|..|2-> generate `stable privacy addresses` using stable secret ([RFC7217](https://datatracker.ietf.org/doc/html/rfc7217)) - balance privacy and stability|
 |..|3-> generate `stable privacy addresses` using random secret|
-|.use_tempaddr|preference for Privacy Extensions|
+|.stable_secret|IPv6 addr - this address will be used as `secret` to generate IPv6 addr for link local and autoconf ones|
+|..|Writes to conf/all/stable_secret are refused ; It is recommended to generate this secret `during startup` and `keep it stable` after that|
+|.use_tempaddr|preference for `Privacy Extensions`|
 |..|<=0 : disable privacy extensions (default)|
 |..|==1 : enable + prefer public over temporary addr|
 |..|>1  : enable + prefer temporary over public addr|
@@ -107,6 +110,40 @@ sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
 |.autoconf|boolean - Autoconfigure address using `prefix information` in RA|
 |..|enabled if .accept_ra_pinfo is enabled|
 |..|disabled if .accept_ra_pinfo is disabled|
+
+## Router Advertisement Daemon
+
+> ([radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html) | [radvd.conf](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the RA-RS exchange of messages to hosts
+
+- */etc/radvd.conf* file : 
+```
+interface ethx { 
+        AdvSendAdvert on;
+        MinRtrAdvInterval 3; 
+        MaxRtrAdvInterval 10;
+        prefix prefix/length { 
+                AdvOnLink on; 
+                AdvAutonomous on; 
+                AdvRouterAddr on; 
+        };
+        route prefix/length {
+	            ## list of route specific options
+        };        
+};
+```
+- */rx.startup* file :
+```bash 
+## static config ...
+ifup eth0
+ifup eth1
+...
+## download and start RA daemon
+dpkg -i radvd_1%3a2.15-2_amd64.deb
+radvd -m logfile -l /var/log/radvd.log
+```
+
+# how start it ??
+# how show packets ??
 
 ### EX1
 
@@ -136,7 +173,12 @@ You should check the sysctl ipv6 settings
 
 Sysctl write can only be done in the lab.conf OR in a priviledged container
 
-1. 
+1. set rx radvd
+2. set rc startup and start daemon
+3. set pcx flags in lab
+4. END
+
+
 - All the pcs of the topology must have GUA addresses.
 
 - pc1, pc2 and pc3 have to use standard address.
@@ -160,10 +202,6 @@ Sysctl write can only be done in the lab.conf OR in a priviledged container
 
 [IPv6 ROUTES](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch07.html)
 
-
-[radvd](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)
-
-[radvd2](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html)
 
 [dhcpv6BIBLE](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
 
