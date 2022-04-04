@@ -169,9 +169,12 @@ it works...
 | (ctrl+z) + | (bg) |
 | tcpdump -ni [ethx/any] -w /shared/file.pcap | (-n) not resolve DNS (-i) define interface (-w) write on |
 
-|ports check | . |
+|ports check |([ss-guide](https://phoenixnap.com/kb/ss-command#)) |
 |--|--|
-|ss|TCP sockets & established connections |
+|ss -a| display all listening and non-listening connections|
+|ss (-l) (-p/u)|only listening sockets + TCP/UDP connections|
+|ss dst (addr) |connections to a specific destination |
+|ss (options) dst :(port number or name)|for a specific destination port number or port name|
 | (-l) listening sockets (-u -t -x) udp,tcp,unix | . |
 | lsof -P -n -i(IPv4) | info about files opened by proceses |
 | netstat | connections states with localhost |

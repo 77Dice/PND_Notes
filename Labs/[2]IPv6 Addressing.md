@@ -153,32 +153,40 @@ radvd -m logfile -l /var/log/radvd.log
    2. posso definire DOMAIN NAME + DNS inside interfaces file
    3. OKOKOKOKOKOKOKOKOKOK
 2. flags as before : SLAAC + R1 IS STATIC 
-3. adesso devo usare DNSMASQ al posto di RADVD
-4. 
+   1. OKOKOKKOKOKOK
+   
+3. adesso devo usare DNSMASQ al posto di RADVD per IPv4+6 (route + DNS + prefix )
+   > [MAN_Page_dnsMasq](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index) :: is a `lightweight` DNS,router advertisement and DHCPv4-v6 server
 
-==> router è `STATIC CONFIGURATION AS SLAAC OPT1` + 
-AGGIUNGO OPZIONI DI DOMAIN NAME + DNS USED (IPV6-V4)
+  - first install DNSMASK by pkg
+```bash
+... how install inside startup 
+###okokokokokokok
+```
+- when starts it read ***/etc/dnsmasq.conf*** if exists
+  - inside there are all explanations and commands to define Autoconfiguration
+  - [example_dnsmasq.conf](https://github.com/imp/dnsmasq/blob/master/dnsmasq.conf.example) : `every row has comment, for every service of DNSMASQ`; 
+    - to enable just uncomment specific row!!
+    - and override it at startup!!!
+```bash
+## configuration ????????????  have copy on SAMPLE.conf
+...
+```
+   - per far partire dnsmasq: 
+```bash
+dnsmasq --test #(!=0 if something Wrong)
+dnsmasq -d (debug mode) -k(run as normal)
 
+## nononononono
+# non parte sulla porta 53... non posso usarlo come DNS server!!
+```
 
-==> ma va usato RADVD???  `NO VA USATO DNSMASQ AL POSTO SUO`
-
-> [DIBBLER](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
-
-
-
-
-## DNS-MASQ
-
-> ([dnsMasq](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index))  is a `lightweight` DNS,router advertisement and DHCPv4-v6 server
-
-> used for both IP versions COnfigurations + SLAAC( no need for radvd - only set flags as before )
-
-
-> On host side we need to define `clients` like : `dibber-client` or `dhclient` for IPv4
+4. adesso devo configurare i Clients per IPv4+6
+    > [DIBBLER](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
 
 ### dibbler-client
 
-> ([man page](https://www.systutorials.com/docs/linux/man/8-dibbler-client/)) is a portable implementation of the `DHCPv6 client` 
+> ([man_dibbler-Client](https://www.systutorials.com/docs/linux/man/8-dibbler-client/)) is a portable implementation of the `DHCPv6 client` 
 1. we need to download package and install it on host VM
     ```bash
     # dibbler-client_1.0.1-1+b1_amd64.deb
