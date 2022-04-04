@@ -1,4 +1,4 @@
-# Connection Script
+# External Connection Script
 
 works on: lab2/ex1
 
@@ -37,3 +37,23 @@ ip addr show dev veth1
 ping -I veth0 2001:db8:cafe:2::10x  # (all lab is reachable)
 
 it works...
+```
+
+# IPv6 Privileges
+
+1. enable IPv6 on kathara settings
+2. start lab VMs with privileges or by bash script:
+```bash
+#!/bin/bash
+xrdb ../.XDefaults
+sudo kathara lstart --privileged
+for p in pc1 pc2 pc3 pc4
+do
+  xterm -e bash -c "kathara connect $p" &
+done
+xrdb ../.XDefaults.alt
+xterm -e bash -c "kathara connect r1" &
+```
+
+It works...
+

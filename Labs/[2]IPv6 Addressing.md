@@ -63,7 +63,7 @@ ip -6 route add default via fe80::1 dev eth0
 |ping -6 fe80::10x%ethx | ONLY ONE that works for link local destinations|
 |ping -6 fe80::10x -I $eth_x$|works for GUA + link local|
 
-# SLAAC Stateless Configuration
+# SLAAC Configuration
 
 ## Network Flags (sysctl)
 
@@ -113,9 +113,9 @@ sysctl (path)  ##show flag
 
 ## Router Advertisement Daemon
 
-> ([radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html) | [radvd.conf](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the RA-RS exchange of messages to hosts
+> ([quick-radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the RA-RS exchange of messages
 
-- */etc/radvd.conf* file : 
+- ([radvd.conf](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)) */etc/radvd.conf* file : 
 ```
 interface ethx { 
         AdvSendAdvert on;
@@ -137,13 +137,89 @@ interface ethx {
 ifup eth0
 ifup eth1
 ...
-## download and start RA daemon
+## download and START RA-daemon
 dpkg -i radvd_1%3a2.15-2_amd64.deb
 radvd -m logfile -l /var/log/radvd.log
 ```
+# SLAAC + DHCPv6 Stateless Configuration
 
-# how start it ??
-# how show packets ??
+1. router as before : static
+   1. 1. inoltre `deve avere ::1 su ogni addr` il router 
+2. flags as before : SLAAC (in questo caso abbiamo sempre bisogno di SLAAC per il prefix)
+3. qui uso DNSMASQ al posto di RADVD
+
+==> router è `STATIC CONFIGURATION AS SLAAC OPT1` + 
+AGGIUNGO OPZIONI DI DOMAIN NAME + DNS USED (IPV6-V4)
+[MAN PAGE](https://manpages.debian.org/stretch/ifupdown/interfaces.5.en.html)
+
+
+==> ma va usato RADVD???  `NO VA USATO DNSMASQ AL POSTO SUO`
+
+> [DIBBLER](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
+
+
+
+
+## DNS-MASQ
+
+> ([dnsMasq](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index))  is a `lightweight` DNS,router advertisement and DHCPv4-v6 server
+
+> On host side we need to define `clients` like : `dibber-client` or `dhclient` for IPv4
+
+### dibbler-client
+
+> ([man page](https://www.systutorials.com/docs/linux/man/8-dibbler-client/)) is a portable implementation of the `DHCPv6 client` 
+1. we need to download package and install it on host VM
+    ```bash
+    # dibbler-client_1.0.1-1+b1_amd64.deb
+    dpkg -i /shared/dibbler-client*.deb
+    apt install -y dibbler-client
+    ```
+2. we `configure it` by **/pcx/etc/dibbler/client.conf** file
+   ```bash
+   awdwa
+
+   ```
+3. start it
+
+ dibber-client start
+
+just follow instructions inside **pcx/etc/dibbler/client.conf
+
+or >> dibbler-client status for information
+
+
+### EX3
+
+> GOAL: to configure the topology to use dynamic IPv6 addresses. You have to use `SLAAC+DHCPv6` to provide GUA addresses: `It is a stateless dynamic addressing`
+
+> we have IPv4 + IPv6 network , 1 client for each version
+1. set flags
+2. set daemons 
+3. set clients 
+  
+You have to properly set up the addresses of r1 and dnmasq
+and to properly set up the pc configurations.
+
+- lan has the subnet 2001:DB8:FEDE:1::/64 and 192.168.100.0/24
+- you can also setup the domain name (es: netsec.local)
+- r1 uses as DNS servers 8.8.8.8 and 2001:4860:4860::8888
+ 
+- pc1 and pc2 must obtain the address via SLAAC and the DNS+domain
+  info via stateless DHCPv6
+
+- pc1 has to use dibbler-client
+  -- you can install it using dpkg -i /shared/dibbler-client*
+
+- pc2 has to use dhclient 
+
+- the router has always 1 in the host part of its own address 
+  even in its local-link address.
+
+
+
+
+
 
 ### EX1
 
@@ -171,38 +247,50 @@ advertise prefixes in both the lans
 
 You should check the sysctl ipv6 settings
 
-Sysctl write can only be done in the lab.conf OR in a priviledged container
+**Sysctl write can only be done in the lab.conf OR in a priviledged container**
 
-1. set rx radvd
-2. set rc startup and start daemon
-3. set pcx flags in lab
-4. END
+1. RA daemon + router flags already set
+2. set pcx flags in lab.conf 
+   1. pc1+3:default-EUI64 / pc2:random ID / pc4:random ID+ Privacy extensions;
+   ```bash
+   ## lab.conf
+   ...
+    r1[sysctl]="net.ipv6.conf.all.forwarding=1"
+    # accept RS only
+    r1[sysctl]="net.ipv6.conf.all.accept_ra=0" 
+   ...
+   ## all pcx accepts RA
+   pcx[sysctl]="net.ipv6.conf.all.forwarding=0"
+   pcx[sysctl]="net.ipv6.conf.all.accept_ra=1"
+   ...
+   ## addr_gen_mode  
+    # default : EUI-64 + LL
+    pc1[sysctl]="net.ipv6.conf.all.addr_gen_mode=0"
 
+    # random Int ID
+    pc2[sysctl]="net.ipv6.conf.all.addr_gen_mode=3"
 
-- All the pcs of the topology must have GUA addresses.
+    # EUI-64 + NO LL
+    pc3[sysctl]="net.ipv6.conf.all.addr_gen_mode=2"
 
-- pc1, pc2 and pc3 have to use standard address.
+    # random Int ID + use privacy extensions + shorter lifetime
+    pc4[sysctl]="net.ipv6.conf.all.addr_gen_mode=3"
+    pc4[sysctl]="net.ipv6.conf.all.use_tempaddr=2"
+    pc4[sysctl]="net.ipv6.conf.all.temp_valid_lft=120"
+   ```
+3. start radvd-DAEMON `on RUNTIME and capture` with tcpdump
+   ```bash
+   tcpdump -ni ethx -w /shared/capture.pcap
+   ## start on runtime
+   radvd -m logfile -l /var/log/radvd.log
+   ```
 
-- pc1 has to use the default configuration for the Interface ID
+- route is working and also ping over networks
 
-- pc2 has to use a Random Interface ID
-
-- pc3 has to use EUI-64
-
-- pc4 has to use the privacy extension in order to make it use
-  temporary addresses. Set up a short lifetime in order to see multiple 
-  addresses. 
-
-- router r1 is already set up. You only have to turn on the radvd server
-  to capture the router advertisement packets. See the r1.startup file.
-
-# reference links
+# General - references
 
 [HOWTO-GUIDE-IPv6](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/index.html)
 
 [IPv6 ROUTES](https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch07.html)
 
 
-[dhcpv6BIBLE](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)
-
-[DNSMASQ](https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html#index)
