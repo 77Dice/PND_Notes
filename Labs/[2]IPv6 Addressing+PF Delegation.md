@@ -293,7 +293,7 @@ dibbler-client start/stop
 - Insert IPv6 information inside interfaces file
 - use pcx.startup for enable interfaces and create routes
   - remember to `flush` past address inside startup:
-```bash
+~~~~bash
 ## first thing first
 ip addr flush ethx
 ## legacy only
@@ -301,7 +301,7 @@ ip addr flush ethx
 ...
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 ...
-```
+~~~~
 - Use IProute2 commands for configure addresses + routes inside others VMs
   - remember to add `at least one scope link` + GUA
 
