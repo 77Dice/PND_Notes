@@ -11,7 +11,7 @@
 - diversity of defence : use different type of security mechanisms
 > Routers are meant to `make the traffic flow`. However, we can introduce some `decisions, rules, permissions` before allowing a packet to flow between networks through `firewalls`
 
-- Least privilage: give at most permission to perform an action and no extra rights
+- Least privilege: give at most permission to perform an action and no extra rights
 - fail/safe stance : if anything go wrong, lets be sure that we end in a fail-safe state.... 
 
 [`Firewall`](https://en.wikipedia.org/wiki/Firewall_(computing)): device that beside acting as a router define rules for `implement a security policy`:
