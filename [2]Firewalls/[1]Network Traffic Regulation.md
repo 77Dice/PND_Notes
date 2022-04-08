@@ -55,6 +55,54 @@
 
 > `Dual-homed` : when we have 2 interfaces `physically dividing` the internal from the external network
 
+### Stateless Packet filters:
+
+- `filter` ingoing\outgoing traffic between internal network(or pc) and the internet : **Packet Filters**
+
+- Operate on Transport, Network and Data link Layers 
+
+![picture 1](../images/e793192ee3a69a86b09706ec6c08dc535920fe677c25dc5cb003be18b06433a1.png)  
+
+- `STATELESS` firewall: 
+  - Drop packets based on its fields ONLY (source,dest,port number,flags...)
+  - **no context, only content**
+
+- `Disadvantages` of Packet Filters:
+    - small number of parameters : rules are too specific or too general
+    - payload of TCP packets is not inspected : no protection against `upper-layer vulnerability`
+    - No Authentication facilities
+    - no protections against `TCP/IP vulnerabilities`
+    - [IP abnormal fragmentation](https://www.imperva.com/learn/ddos/ip-fragmentation-attack-teardrop/#:~:text=IP%20fragmentation%20attacks%20are%20a,by%20exploiting%20datagram%20fragmentation%20mechanisms.)
+    
+### Stateful Packet inspection:
+
+- `STATEFUL` firewall:
+  - Keeps track of `established connections`
+  - Can drop packets based on their source or destination
+IP addresses, port numbers and possibly `connection states flags` 
+> Connection Tracking : [TCP Finite State Machine](http://tcpipguide.com/free/t_TCPOperationalOverviewandtheTCPFiniteStateMachineF-2.htm)
+
+### Other Types of firewalls:
+
+- Application-Level filtering : apply specific mechanism for each application : `intelligent filtering`
+  - +support user-to-gateway authentication
+  - +can log + audit all activity
+  - -Big overhead
+  - -App specific
+  - -not always transparent
+- Circuit-Level gateways : `TCP relay` or `Generic Proxy`
+  - Splices and relays TCP connections
+  - SOCKS performs at layer 5 of OSI model : `Session Layer`
+  - does not examine contents of TCP segments
+  - Less control that App-lv gateway
+- Next-Gen Firewalls : 
+  - Intrusion Detection Systems + VPN GW + Deep packet inspections + Traffic shaping
+  
+### Common firewall weaknesses: 
+  - no content inspection $\rightarrow$ Sw and Protocol weakness
+  - no defense against DOS + Insider attacks
+  - Firewall failure has to be prevent : cluster for redundancy
+  
 ## Demilitarized zone - DMZ
 
 - `neutral zone` between private network and outside public network 
@@ -77,7 +125,24 @@
   - like start topology
   - **a lot of complexity to manage** : not easy
   
-# Packet Filtering 
-slide 21 packet filtering ::::
+# Filter Rules for network firewalls
+
+- Assumptions:
+   1. `Security policy` stating what is allowed and not is given
+   2. `we can Identify` the good and bad traffic by packet's fields and flags
+   3. Firewall is `immune to` penetration
+- general mechanism:
+  - Rules are checked on **top-down** approach
+  - the first matching rule is applied 
+  - One default rule is assumed if no rules matches (block\allow everything)
+- Three-step process:
+    1. Know your policy
+    2. Translate the policy in a formal language
+    3. Rewrite the policy in terms of the firewall syntax
+- **egress filtering** : monitoring and potentially restricting the flow of information outbound from one network to another
+- **ingress filtering** : ensure that incoming packets are actually from the networks from which they claim to originate : `to avoid address spoofing`
+
+|#|comment| IPsrc | IPdst |srcPort| dstPort |proto| flag  | Action |
+|--| --| --| --| --| --| -- | --| --|
 
 
