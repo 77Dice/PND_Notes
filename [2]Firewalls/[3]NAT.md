@@ -13,3 +13,8 @@ SLIDE 11
 + lab4
 
 > IPv6 reachability is not a Downside because a good firewall policy can make the internal network secure. -- NAT is NOT a SECURITY FEATURE
+
+
+[link1](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)
+
+[link2](https://www.computernetworkingnotes.com/)
