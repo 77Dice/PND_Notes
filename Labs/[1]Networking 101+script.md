@@ -38,7 +38,7 @@
 
 ## How configure topology of networks
 
-> [Debian Network Setup](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html) | [NetworkManager_cli](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
+> [Debian Network Setup](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html)
 
 - In order to `properly` use Internet an Host has to receive `4 main pieces` on information:
   - The IP address
@@ -179,6 +179,13 @@ it works...
 | lsof -P -n -i(IPv4) | info about files opened by proceses |
 | netstat | connections states with localhost |
 | (-ltn) listening,tcp,no resolve | | 
+
+## Network Manager
+> [NetworkManager_Guide](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
+
+|nmcli ||
+|--|--|
+|nmcli device show [ethx] | show interface main info|
 
 ## shared folder
 
