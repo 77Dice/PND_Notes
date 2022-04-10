@@ -14,11 +14,11 @@ sudo ip addr flush veth0
 sudo ip addr add [addr/x] dev veth0
 
 # find docker image of local network
-sudo docker network list | grep kathara_[user]-xxxx_[lan]
-                         | grep kathara_xxx
-#bridge = xxx
+sudo docker network list | grep kathara_[user]-..._[lanName]
 
-sudo ip link set veth1 master kt-xxxx                        
+#bridge = kt-[NETWORK ID]
+
+sudo ip link set veth1 master kt-[Network ID]                        
 
 sudo ip link set veth0 up
 sudo ip link set veth1 up
