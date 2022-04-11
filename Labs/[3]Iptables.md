@@ -135,8 +135,6 @@ iptables [-t table] -E old_chain new_chain_name
 -p --protocol [prt] | Match the protocol type
 -s --src [ip-address] |Match the source IP address
 -d --dst [ip-address] |Match the destination IP address
--p tcp --sport port| Match the tcp source port (also works for udp)
--p tcp --dport port |Match the tcp destination port (also works for udp)
 -i --in-interface [eth-name] |Match input interface (from which the packet enters)
 -o --out-interface [eth-name] |Match output interface (on which the packet exits)
 ! (==not) |Used to negate the match. Can be used with many flags, Example: all the source addresses but a specific one **-s ! ip_address**
@@ -179,8 +177,43 @@ iptables-restore < iptables_rules.sh
 
 ## EX1,2
 
+```bash
+tutti IPv4 ; 
+s1 ->  webserver
 
+echo 2001:db8:cafe:2::80/64 s1 >>/etc/hosts  ## posso aggiungere  alle VM e pingare direttamente l'host name .
+
+collegandomi posso pingare dentro con 
+>> ping ----- -I veth0
++ sudo ip route add 192.168.100.0/24 via 192.168.10.1 
+per poter fare wget in tranquillità
+
+
++ echo 192.168.100.80 s1 >> /etc/hosts  ---> utile soprattutto per il router se devo fare tcpdump -i ethx
+anche SSH funziona da esterno !!!
+```
+
+## ex1
+
+> block SSH traffic from outside  :  " only allow HTTP traffic to s1" 
+```bash
+#creare sotto catena di filter : if destinatio is s1 then JUMP to subchain:
+# here :: policy is DROP|REJECT   
+#  +  only allow HTTP traffic TO s1 :
+
+iptables -N S1_fiter
+iptables -A INPUT -i eth0(external) --dst s1 -j S1_filter 
+iptables -P S1_fiter REJECT 
+iptables -A S1_filter -p tcp --dport (80-8080) -j ACCEPT(or go back to INPUT??)
+iptables -A S1_filter -p tcp --dport -m state --state NEW,ESTABL,REL(regola x established connections...) -j ACCEPT
+
+# regola x accettare dalla porta HTTP + tutte le established connections (non so se serve davvero...)
+```
 i just need to follow instructions:
+
+[HOW TO JUMP TO OTHER CHAINS](https://www.frozentux.net/iptables-tutorial/chunkyhtml/c3965.html)
+
+
 
 Do 3 step rules construction 
 
