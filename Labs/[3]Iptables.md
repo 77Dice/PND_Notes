@@ -2,14 +2,14 @@
 - [Netfilter](https://it.wikipedia.org/wiki/Netfilter) : linux kernel framework that provides hook handling for intercepting & manipulating network packets
 - [Hooks](https://en.wikipedia.org/wiki/Hooking) : entities (like modules) that allow packets `manipulation` during their traversing
   -  when intercepted by there hooks the IP packet is verified against a given set of `matching rules` and processed by an `action` configured by the user  
-- [Iptables](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html) : Userspace level configurator
+- [Iptables](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html) : Userspace level configurator 
   - *order of matching rules is important*
   - packets fates depend on the *first matching rule*
   - If no match the *default policy will be applied*
+  - every chain has its *default policy* 
+
  
 > ***TABLES** (operation over a packet) as set of **CHAINS** (how packets are elaborated)(queues) as set of **RULES**(match+action);*
-
-every chain has its default policy
 
 ## built-in tables 
 
@@ -28,7 +28,7 @@ each table defines a different kind of operation that can be perform over the pa
 
 > ![picture 1](../images/757f07dd756b276a90b3bd92a17b96a140eb2ed35cdd70c5e495ec8306c1f753.png)  
 
-Every packet pass through a set of hook-chains of multiple tables, each rule inside tables check a match. If match, the other rules will be ignored
+Every packet pass through a set of hook-chains of multiple tables, each rule inside tables check a match. If match, other rules will be ignored
 
 
 > ![picture 2](../images/076443cd74e3f0e366e1f477ceb76d6fca88ca3e73a10bed722cc2e5d2544463.png)  
@@ -44,9 +44,40 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
 
 ## build-in rules
 
-> match rule + target / Action
+> <center>[Match + target]</center>
+- **Match** : specification of the packet processed, a `special condition` within the packet that must be true (or false)
+- **Target** : how manipulate the packet matching the rule, what Action to perform : 
+
+|**Target**|*how manipulate the packet matching the rule : what Action to perform*|
+|--|--|
+|ACCEPT| result depends on the current chain in the current table|
+  | DROP | delete without sent back NACK |
+  | QUEUE |  send packets to upper layers programs and applications|
+  | RETURN | packet go to default policy of current chain, if sub-chain then travel through superior chain
+  | REJECT | equal to DROP + send back ICMP error (**only** for filter table and its chains) 
+  | LOG | logging packets, debugging of rules if used instead of DROP ([syslogd](https://linux.die.net/man/8/syslogd))
+  | DNAT | override IP destination address of packet and *all subsequent packets in the same stream* (**only** for NAT table and PRE_ROUTING + OUTPUT chains) 
+  | SNAT | (--to-source) override IP source address of packet, used when multiple hosts share same Public IP Address (**only** for NAT table and POST_ROUTING chain)
+  | MASQUERADE | as SNAT but for dynamically assigned IP connections, *we set the IP address used on a specific network interface instead of the (--to-source) option* (**only** for NAT table and POST_ROUTING chain)
+  | ... | [other_TARGETS](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html#TARGETS)
+
+## conntrack module 
+
+stateful packet filtering --> connection tracking system !!
+
+## iptables SYNTAX 
+...
+## Commands 
+
+|command|switches|
+|--|--|
+|awd|awd|
+|wda|awd|
 
 
+
+- how save rule set : 
+- 
 
 
 # ex 1,2,3
