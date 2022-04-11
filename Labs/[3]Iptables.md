@@ -101,11 +101,12 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
 - tables as small letters // chains as CAPITAL LETTERS
 - commands as CAPITAL LETTERS // option as small letters
 
-| [Cmds+Options_tutorial](https://book.huihoo.com/iptables-tutorial/x5245.htm)| -L --list options  | 
+|-L --list options | --  | 
 |--|--|
 |-v | verbose|
 |-n | numerical values, no name resolv |
 |--line-numbers | show rule number|
+|**[Cmds+Options_tutorial](https://book.huihoo.com/iptables-tutorial/x5245.htm)**|**[Jump to other Chains_example](https://www.frozentux.net/iptables-tutorial/chunkyhtml/c3965.html)**|
 
 ```bash
 rule -> [match] + -j [target]
@@ -149,7 +150,7 @@ iptables [-t table] -E old_chain new_chain_name
 --icmp-type type |Match specific ICMP [packet types](https://book.huihoo.com/iptables-tutorial/a12854.htm)
 -m module |Uses an extension module
 -m state --state s |Enable **connection tracking**, Match a packet which is in a specific state
--m multiport ... | Enable specification of several ports with one sigle rule
+-p [ptc] -m multiport --xport port | Enable specification of several ports with one single rule
 
 |--|--|
 |--|--|
@@ -168,9 +169,9 @@ iptables -t filter -F
 # allow only service XX
 iptables ...
 ------------------------
-# built-in commands
-iptables-save > iptables_rules.sh
-iptables-restore < iptables_rules.sh
+# built-in commands (we use legacy iptables)
+iptables-legacy-save > iptables_rules.sh
+iptables-legacy-restore < iptables_rules.sh
 ```
 
 # Lab Activity
@@ -181,7 +182,7 @@ iptables-restore < iptables_rules.sh
 tutti IPv4 ; 
 s1 ->  webserver
 
-echo 2001:db8:cafe:2::80/64 s1 >>/etc/hosts  ## posso aggiungere  alle VM e pingare direttamente l'host name .
+echo 2001:db8:cafe:2::80/64 s1 >>/etc/hosts  ## posso aggiungere  alle VM e pingare direttamente l'host name
 
 collegandomi posso pingare dentro con 
 >> ping ----- -I veth0
@@ -193,31 +194,22 @@ per poter fare wget in tranquillità
 anche SSH funziona da esterno !!!
 ```
 
-## ex1
+## ex1,2
 
-> block SSH traffic from outside  :  " only allow HTTP traffic to s1" 
+> block SSH traffic from outside  :  " only allow HTTP traffic to s1"   + do the same in ipv6
 ```bash
 #creare sotto catena di filter : if destinatio is s1 then JUMP to subchain:
 # here :: policy is DROP|REJECT   
 #  +  only allow HTTP traffic TO s1 :
 
 iptables -N S1_fiter
-iptables -A INPUT -i eth0(external) --dst s1 -j S1_filter 
-iptables -P S1_fiter REJECT 
-iptables -A S1_filter -p tcp --dport (80-8080) -j ACCEPT(or go back to INPUT??)
-iptables -A S1_filter -p tcp --dport -m state --state NEW,ESTABL,REL(regola x established connections...) -j ACCEPT
+iptables -A FORWARD -i eth0(external) --dst s1 -j S1_filter
+# sub chain  rules 
+iptables -P S1_fiter DROP ## POLICY TAKE ONLY DROP-ACCEPT
+# allow only HTTP traffic to s1 
+iptables -A S1_filter -p tcp --dport (80-8080) -j ACCEPT
 
-# regola x accettare dalla porta HTTP + tutte le established connections (non so se serve davvero...)
+
+
+## non funziona : continua ad accettare tutti gli altri servizi. non manda ICMP REJECT packet.  xche?? su che chain vengono accettati ??? 
 ```
-i just need to follow instructions:
-
-[HOW TO JUMP TO OTHER CHAINS](https://www.frozentux.net/iptables-tutorial/chunkyhtml/c3965.html)
-
-
-
-Do 3 step rules construction 
-
-LAB activity lex 10
-
-take it from NI. devo dire che NI è l'esame in cui ho fatto meglio iptables....
-
