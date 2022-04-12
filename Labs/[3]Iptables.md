@@ -149,7 +149,8 @@ iptables [-t table] -E old_chain new_chain_name
 -p tcp --dport port |Match the tcp destination port
 -p udp --sport port |Match the udp source port
 -p udp --dport port |Match the udp destination port
---icmp-type type |Match specific ICMP [packet types](https://book.huihoo.com/iptables-tutorial/a12854.htm)
+-p icmp --icmp-type type |Match specific ICMP [packet types](https://book.huihoo.com/iptables-tutorial/a12854.htm)
+|-p icmpv6 --icmpv6-type type|ip6tables version|
 -m module |Uses an extension module
 -m state --state s |Enable **connection tracking**, Match a packet which is in a specific state
 -p [ptc] -m multiport --xport port | Enable specification of several ports with one single rule
@@ -171,7 +172,7 @@ iptables -t filter -F
 # allow only service XX
 iptables ...
 ------------------------
-# built-in commands (we use legacy iptables)
+# built-in commands (legacy)
 iptables-legacy-save > iptables_rules.sh
 iptables-legacy-restore < iptables_rules.sh
 ```
@@ -185,9 +186,9 @@ iptables-legacy-restore < iptables_rules.sh
 - after starting the lab on host machine 
 ```bash
 # add route to VM enviroment
-  sudo ip route add 192.168.100.0/24 via 192.168.10.1
+  sudo ip route add 192.168.100.0/24 via 192.168.10.1 dev veth0
 # Ipv6 case
-  sudo ip -6 route add 2001:db8:cafe:1::/64 via 2001:db8:cafe:2::1
+  sudo ip -6 route add 2001:db8:cafe:1::/64 via 2001:db8:cafe:2::1 dev veth0
 ```
 - on VM in order to reach outside network they need default route
 ```bash
@@ -201,6 +202,7 @@ iptables-legacy-restore < iptables_rules.sh
 - visualize **# of packets** matched by your rules
 ```bash
   iptables -L -v -f filter
+  ip6tables -nvL
 ```
 
 ### EX1,2
@@ -210,7 +212,7 @@ iptables-legacy-restore < iptables_rules.sh
 > GOAL : do the same with IPv6 and `ip6tables`
 
 - create sub-chain for destination traffic towards s1 ONLY
-- add rules there : `iptables ...`
+- `iptables backup file` :
 ```bash
 -N S1
 -A FORWARD -d 192.168.100.80/32 -j S1
@@ -221,17 +223,22 @@ iptables-legacy-restore < iptables_rules.sh
 
 ### EX3
 
-> GOAL : DMZ can be accessed from outside but *cannot initiate any connection* ; Only internal hosts can also reach DMZ **via ssh**
+> GOAL : implement security policy below
 - Use both IPv4 and IPv6
+- test your policy from the isp machine (or local-host)
+1. Internal Network (eth2)
+    - Your internal pcs may freely access any Web service, anywhere, on ports **80 and 443**, but only **if they initiate the connection themselves** (i.e. they are allowed to browse the Web)
+    - **No one outside** the internal lan **can initiate** connections to internal lan, on any port
+    - Internal users **can access** the Web servers and mail servers **in DMZ via SSH**, too
+    - They can also **use SSH** to reach **any host** on the Internet.
+    - However, hosts **in DMZ** can only be contacted **on port 22** by hosts in the internal lan
 ```bash
-## ext can talk to DMZ  
-## from DMZ no packet of state NEW
-## from internal to DMZ only on port 22 other traffic is rejected 
--N toDMZ
--A FORWARD -d (DMZ/24 network addr) -j toDMZ
--A toDMZ -i ethx(internal NET) -p tcp --dport 22 -j ACCEPT #accept only ssh connections from internal network to DMZ
--A FORWARD -i ethy(DMZNetwork) -m state --state NEW -j DROP
-
+...
 ```
-
+2. DMZ Network (eth1)
+   - **Everyone**, including the Internet, can access Web (both ports) and mail in DMZ to access their main functions **and for ping**
+   - However, **no host** in DMZ **can initiate connections** anywhere else
+```bash
+...
+```
 
