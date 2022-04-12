@@ -90,7 +90,7 @@ r1[sysctl]= "net.ipv6.conf.all.accept_ra=0"
 on *startup file* only on `privileged mode` :
 ```bash
 sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
-sysctl (path)  ##show flag value
+sysctl (dot-notation variable)  ##show flag value
 ```
 |Used Flags| net.ipv6.conf.all.*|
 |--|--|

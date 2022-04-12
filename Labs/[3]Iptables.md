@@ -8,6 +8,7 @@
   - If no match the *default policy will be applied*
   - every chain has its *default policy* 
 - [Iptables_book](https://book.huihoo.com/iptables-tutorial/book1.htm)
+- [ip6tables_man](https://linux.die.net/man/8/ip6tables)
 
  
 > ***TABLES** (operation over a packet) as set of **CHAINS** (how packets are elaborated)(queues) as set of **RULES**(match+action);*
@@ -179,24 +180,35 @@ iptables-legacy-restore < iptables_rules.sh
 - add **alias** makes rules easier 
 ```bash
   echo 192.168.10.2 local_host >> /etc/hosts
+  echo 2001:db8:cafe:2::2 local6_host >> /etc/hosts
 ```
 - after starting the lab on host machine 
 ```bash
 # add route to VM enviroment
   sudo ip route add 192.168.100.0/24 via 192.168.10.1
+# Ipv6 case
+  sudo ip -6 route add 2001:db8:cafe:1::/64 via 2001:db8:cafe:2::1
+```
+- on VM in order to reach outside network they need default route
+```bash
+  ip -6 route add default via fe80::1 dev eth0
 ```
 - remember to save your configuration **on shared** folder 
 ```bash
   iptables-save > /shared/r1_RULES.sh
+  ip6tables-save > /shared/r1_RULES.sh
 ```
 - visualize **# of packets** matched by your rules
 ```bash
   iptables -L -v -f filter
 ```
 
-### EX1
+### EX1,2
 
-> GOAL : Allow HTTP traffic to s1 only
+> GOAL : Allow HTTP traffic to s1 only 
+
+> GOAL : do the same with IPv6 and `ip6tables`
+
 - create sub-chain for destination traffic towards s1 ONLY
 - add rules there : `iptables ...`
 ```bash
@@ -207,7 +219,19 @@ iptables-legacy-restore < iptables_rules.sh
 -A S1 -j REJECT --reject-with icmp-port-unreachable
 ```
 
-### EX2
+### EX3
 
-> GOAL : do the same with IPv6 and `ip6tables`
+> GOAL : DMZ can be accessed from outside but *cannot initiate any connection* ; Only internal hosts can also reach DMZ **via ssh**
+- Use both IPv4 and IPv6
+```bash
+## ext can talk to DMZ  
+## from DMZ no packet of state NEW
+## from internal to DMZ only on port 22 other traffic is rejected 
+-N toDMZ
+-A FORWARD -d (DMZ/24 network addr) -j toDMZ
+-A toDMZ -i ethx(internal NET) -p tcp --dport 22 -j ACCEPT #accept only ssh connections from internal network to DMZ
+-A FORWARD -i ethy(DMZNetwork) -m state --state NEW -j DROP
+
+```
+
 
