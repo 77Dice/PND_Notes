@@ -106,6 +106,7 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
 |-v | verbose|
 |-n | numerical values, no name resolv |
 |--line-numbers | show rule number|
+|-L -v -f filter | show **number** of packets **matched** by the rule |
 |**[Cmds+Options_tutorial](https://book.huihoo.com/iptables-tutorial/x5245.htm)**|**[Jump to other Chains_example](https://www.frozentux.net/iptables-tutorial/chunkyhtml/c3965.html)**|
 
 ```bash
@@ -175,41 +176,38 @@ iptables-legacy-restore < iptables_rules.sh
 ```
 
 # Lab Activity
-
-## EX1,2
-
+- add **alias** makes rules easier 
 ```bash
-tutti IPv4 ; 
-s1 ->  webserver
-
-echo 2001:db8:cafe:2::80/64 s1 >>/etc/hosts  ## posso aggiungere  alle VM e pingare direttamente l'host name
-
-collegandomi posso pingare dentro con 
->> ping ----- -I veth0
-+ sudo ip route add 192.168.100.0/24 via 192.168.10.1 
-per poter fare wget in tranquillità
-
-
-+ echo 192.168.100.80 s1 >> /etc/hosts  ---> utile soprattutto per il router se devo fare tcpdump -i ethx
-anche SSH funziona da esterno !!!
+  echo 192.168.10.2 local_host >> /etc/hosts
+```
+- after starting the lab on host machine 
+```bash
+# add route to VM enviroment
+  sudo ip route add 192.168.100.0/24 via 192.168.10.1
+```
+- remember to save your configuration **on shared** folder 
+```bash
+  iptables-save > /shared/r1_RULES.sh
+```
+- visualize **# of packets** matched by your rules
+```bash
+  iptables -L -v -f filter
 ```
 
-## ex1,2
+### EX1
 
-> block SSH traffic from outside  :  " only allow HTTP traffic to s1"   + do the same in ipv6
+> GOAL : Allow HTTP traffic to s1 only
+- create sub-chain for destination traffic towards s1 ONLY
+- add rules there : `iptables ...`
 ```bash
-#creare sotto catena di filter : if destinatio is s1 then JUMP to subchain:
-# here :: policy is DROP|REJECT   
-#  +  only allow HTTP traffic TO s1 :
-
-iptables -N S1_fiter
-iptables -A FORWARD -i eth0(external) --dst s1 -j S1_filter
-# sub chain  rules 
-iptables -P S1_fiter DROP ## POLICY TAKE ONLY DROP-ACCEPT
-# allow only HTTP traffic to s1 
-iptables -A S1_filter -p tcp --dport (80-8080) -j ACCEPT
-
-
-
-## non funziona : continua ad accettare tutti gli altri servizi. non manda ICMP REJECT packet.  xche?? su che chain vengono accettati ??? 
+-N S1
+-A FORWARD -d 192.168.100.80/32 -j S1
+-A S1 -p tcp -m multiport --dports 80,8080 -j ACCEPT
+##-A S1 -p tcp -m tcp --dport 22 -j ACCEPT
+-A S1 -j REJECT --reject-with icmp-port-unreachable
 ```
+
+### EX2
+
+> GOAL : do the same with IPv6 and `ip6tables`
+
