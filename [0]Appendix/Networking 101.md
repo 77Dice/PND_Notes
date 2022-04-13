@@ -248,7 +248,7 @@ others
 
 ## Well-Known Ports 
 
-Range is `[0..65535]`; Source port is randomly chosen by OS but `destination port` determines the `required service(application)`
+Range is `[0..65535]`; Source port is **randomly chosen** by OS but `destination port` determines the `required service(application)`
 
 - Assigned Ports `[0..1023]` are said "well-known ports" and used for `standard internet applications`:
   - [TCP/UDP Ports Wiki](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers)

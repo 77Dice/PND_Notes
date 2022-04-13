@@ -1,7 +1,7 @@
 # 04/04
 
 # LAB4 related
-SLIDE 11
+SLIDE 11 : 5 aprile
 
 - routed vs transparent mode
   - transparent : layer 2 only ( not a network node - transparent to network)

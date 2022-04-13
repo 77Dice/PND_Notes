@@ -150,10 +150,11 @@ iptables [-t table] -E old_chain new_chain_name
 -p udp --sport port |Match the udp source port
 -p udp --dport port |Match the udp destination port
 -p icmp --icmp-type type |Match specific ICMP [packet types](https://book.huihoo.com/iptables-tutorial/a12854.htm)
-|-p icmpv6 --icmpv6-type type|ip6tables version|
+|-p icmpv6 --icmpv6-type type|ip6tables-[icmpv6](https://it.wikipedia.org/wiki/ICMPv6) version|
 -m module |Uses an extension module
 -m state --state s |Enable **connection tracking**, Match a packet which is in a specific state
 -p [ptc] -m multiport --xport port | Enable specification of several ports with one single rule
+|-m addrtype --src/dst-type (typ)|Match IP address : UNICAST,MULTICAST,BROADCAST|
 
 |--|--|
 |--|--|
@@ -231,14 +232,31 @@ iptables-legacy-restore < iptables_rules.sh
     - **No one outside** the internal lan **can initiate** connections to internal lan, on any port
     - Internal users **can access** the Web servers and mail servers **in DMZ via SSH**, too
     - They can also **use SSH** to reach **any host** on the Internet.
-    - However, hosts **in DMZ** can only be contacted **on port 22** by hosts in the internal lan
-```bash
-...
-```
+    - However, hosts **in DMZ** can only be contacted **on port 22 by** hosts in the **internal lan**
 2. DMZ Network (eth1)
    - **Everyone**, including the Internet, can access Web (both ports) and mail in DMZ to access their main functions **and for ping**
    - However, **no host** in DMZ **can initiate connections** anywhere else
+- order of rules is important
 ```bash
-...
-```
+# internal to ... 80,334
+-A FORWARD -s internalV6/64 (-i eth2) -p tcp -m multiport --dports 80,443 -j ACCEPT
 
+# --> flip : cannot accept NEW packets directed to internal Lan
+-A FORWARD -d internalV6/64 (-o eth2) -p tcp -m state ! --state NEW -j ACCEPT
+###-A FORWARD -d internalV6/64 (-o eth2) -p icmpv6 ! --icmpv6-type 128 -j ACCEPT
+
+# ping, all packets except for 128 from DMZ (-p icmp)
+-A FORWARD -d DMZ/64 (-o eth1) -p icmpv6  -j ACCEPT # verso DMZ ALL ICMP PACKETS
+-A FORWARD  (-i eth1) -p icmpv6 ! --icmpv6-type (echo-request --> 128) -j ACCEPT
+
+# DMZ : no new connections
+-A FORWARD -s DMZ/64 (-i eth1) -p tcp -m state ! --state NEW -j ACCEPT
+
+# DMZ services 
+-A FORWARD -d DMZ/64 (-o eth1) -p tcp -m multiport --dports 80,443,25 -j ACCEPT
+
+# ssh bridge internal-DMZ
+-A FORWARD -s internalV6/64 (-i eth2) -d DMZ/64 (-o eth1) -p tcp --dport 22 -j ACCEPT
+
+-P FORWARD DROP
+```
