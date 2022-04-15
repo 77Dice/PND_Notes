@@ -7,6 +7,7 @@ works on: lab2/ex1
 > after starting the lab we need to link one collision domain(local net) to a `virtual interface` ($veth_x\ veth_y$)
 
 > we need to find the `docker image` related to the `collision domain` we want to connect : there exists `one for each network` with the same name as defined in the `.lab file`
+> - [bridged NICs](https://wiki.debian.org/BridgeNetworkConnections)
 ```bash
 sudo ip link del veth1 type veth
 sudo ip link add veth1 type veth

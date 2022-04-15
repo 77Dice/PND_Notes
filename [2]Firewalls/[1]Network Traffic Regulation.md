@@ -98,6 +98,14 @@ IP addresses, port numbers and possibly `connection states flags`
 - Next-Gen Firewalls : 
   - Intrusion Detection Systems + VPN GW + Deep packet inspections + Traffic shaping
   
+### Firewall modes:
+
+- Routed mode : 
+  - firewall is hop in the routing process
+  - Divide different logical networks (layer 3)
+- Transparent mode :
+  - works with data at layer 2
+
 ### Common firewall weaknesses: 
   - no content inspection $\rightarrow$ Sw and Protocol weakness
   - no defense against DOS + Insider attacks
