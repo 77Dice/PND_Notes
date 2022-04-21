@@ -102,7 +102,8 @@ sudo ip link set veth1 up
 
 ip addr show dev veth1
 ip addr show dev veth1
------------------------------
+```
+```bash
 # on host machine ---listening on veth1
 ~$ tcpdump -ni veth1  
 

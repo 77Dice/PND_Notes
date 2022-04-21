@@ -101,7 +101,7 @@ sysctl (dot-notation variable)  ##show flag value
 |..|2-> Overrule forwarding behaviour|
 |.addr_gen_mode|define `how` link-local and autoconf `addr are generated`|
 |..|0-> EUI-64 (default)|
-|..|1-> DO NOT generate ll + EUI-64 for autoconf addr|
+|..|1-> DO NOT generate link-local + EUI-64 for autoconf addr|
 |..|2-> generate `stable privacy addresses` using stable secret ([RFC7217](https://datatracker.ietf.org/doc/html/rfc7217)) - balance privacy and stability|
 |..|3-> generate `stable privacy addresses` using random secret|
 |.stable_secret|IPv6 addr - this address will be used as `secret` to generate IPv6 addr for link local and autoconf ones|
