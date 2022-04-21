@@ -4,7 +4,7 @@
 2. execute command : 
 ```bash
 # ACME 21 --> 5021 + matricula
-ssh -L $5021$:100.90.0.$21$:1194 $1605230$@151.100.174.34 -p 80
+ssh -L 5021:100.90.0.$21$:1194 1605230@151.100.174.34 -p 80
 # use password sent by email
 ### --> PORT FORWARDING  : all traffic for local port 5021 will be directed to host 100.90.0.21.... but all will be sent using ssh tunnel by our server . 
 ... for now is not working !!!
