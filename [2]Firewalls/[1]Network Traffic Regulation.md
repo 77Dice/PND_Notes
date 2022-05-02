@@ -119,7 +119,7 @@ IP addresses, port numbers and possibly `connection states flags`
 
 ### DMZ cases
 
-> implementation of **defense-in-Depth** approach to security
+> Implementation of **defense-in-Depth** approach to security
 - DMZ as screened Host : 
   - Screening router $\rightarrow$ redirect all traffic to Bastion Host
   - Bastion Host $\rightarrow$ make decisions over traffic flow directed to the network
