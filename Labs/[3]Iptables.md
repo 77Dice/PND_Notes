@@ -205,6 +205,11 @@ iptables-legacy-restore < iptables_rules.sh
   iptables -L -v -f filter
   ip6tables -nvL
 ```
+- how get **HTTP pages** in IPv6
+```bash
+$ wget IPv6_alias
+$ wget http://[IPv6_address]:port
+```
 
 ### EX1,2
 
