@@ -20,6 +20,8 @@
 |ip route [add\del] a.b.c.d/m dev ethx  | Direct forwarding |
 |ip neigh [flush\show] dev ethx  | show/flush ARP table |
 
+> [ifconfig man page](https://man7.org/linux/man-pages/man8/ifconfig.8.html) - [examples](https://www.tecmint.com/ifconfig-command-examples/)
+
 | ifconfig commands  | for legacy systems     |
 | -- |-- |
 | ifconfig (-a) [ethx]  | display all active interfaces and details |
@@ -27,6 +29,8 @@
 |ifconfig ethx a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface |    
 | ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address |
 | route add default gw a.b.c.d  | set default route gateway  |
+
+> [route man page](https://man7.org/linux/man-pages/man8/route.8.html)
 
 ## kathara files
 
@@ -45,7 +49,11 @@
   - The netmask (defines Network/host portion of IP address)
   - The IP address of its Default Gateway (device in local network `able to access` the Distribution layer)
   - The IP address of a DNS (a remote server `able to translate` human intelligible names to IP addresses)
-
+  - definition of MTU as shown :
+```bash
+      sudo ip link set eth0 mtu 1400 
+      ifconfig emX mtu 1400
+```
 > configuration can be `static`: inside */vm/etc/network/interfaces* or at `startup` using *ifconfig* or *iproute2* commands; (ex. on lab1)
 
 ## DHCP3 setup
