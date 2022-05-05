@@ -14,7 +14,7 @@
 ## Hex and IPv6 Address Representation
 
 >([addr types](https://oracle-patches.com/en/cloud-net/ipv6-address-types-unicast,-multicast,-and-anycast)) IPv6 addresses are **128-bit** divided in **(8 x 16-bit)** segments or **hextets** in range [0000:FFFF]
-> and Represented as **Hexadecimal digits**: `1 hex digit = 4 Binary bits` separated by ":"
+> and Represented as **Hexadecimal digits**: `1 hex digit = 4 Binary bits` separated by ":" ([converter](https://www.rapidtables.com/convert/number/decimal-to-hex.html))
 
 
 > ![picture 6](../images/bbb85f7d4684cfa6c1122c97162a9baf4b566be2acc10ca7a1fc0c6eb1ab5308.png)  

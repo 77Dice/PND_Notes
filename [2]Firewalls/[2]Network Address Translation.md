@@ -15,9 +15,16 @@
 
 > Translate **outgoing** requests : The session is Masqueraded as coming from the NAT device 
 - Translation reference is kept inside the **NAT Table**
-- The *NAT table* is where associations between **requests :: internal IP addresses** are kept
+  - The *NAT table* is where associations between **requests :: internal IP addresses** are kept
 - every packet related to the session will be translated based on that 
 - enable the client-server session to continue on **another port**; forwarding any response by the server to the client **(RELATED packet)**
+
+### Destination NAT (DNAT)
+
+
+### Network Address Port (NAPT)
+
+when it translate protocol port number (destination/source?? port )
 
 # LAB4 related
 SLIDE 11 : 5 aprile
