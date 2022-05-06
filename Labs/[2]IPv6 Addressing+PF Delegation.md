@@ -122,6 +122,8 @@ saved on `/etc/sysctl.d/99-sysctl.conf` configuration file
 |.autoconf|boolean - Autoconfigure address using `prefix information` in RA|
 |..|enabled if .accept_ra_pinfo is enabled|
 |..|disabled if .accept_ra_pinfo is disabled|
+|.ip_nonlocal_bind| boolean - allows processes to bind() to non-local IP addresses; may break some applications |
+|..|used to solve race condition between SLAAC and dnsmasq at boot
 
 ## Router Advertisement Daemon
 
