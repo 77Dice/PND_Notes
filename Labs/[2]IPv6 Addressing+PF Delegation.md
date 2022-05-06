@@ -45,7 +45,8 @@ ifup -a
 ifquery -l
 ## route add
 ip -6 route add default via fe80::1 dev eth0 
-#ip -6 route add 2001:db8:cafe:2::/64 via fe80::1 dev eth0
+# no need if you define gateway inside interfaces file
+ip -6 route add 2001:db8:cafe:2::/64 via fe80::1 dev eth0
 ```
 
 # IPv6 IpRoute2 Configuration
@@ -123,6 +124,8 @@ sysctl (dot-notation variable)  ##show flag value
 ## Router Advertisement Daemon
 
 > ([quick-radvd](https://www.linuxtopia.org/online_books/network_administration_guides/Linux+IPv6-HOWTO/hints-daemons-radvd.html)) in order to activate SLAAC autoconfiguration the default IPv6 Gateway Router needs to enable the `daemon` delegated to manage the Autoconfigration via RA-RS messages
+
+It sends information on **how autoconfigure it locally** inside the machines based on flags 
 
 - ([radvd.conf](https://manpages.debian.org/testing/radvd/radvd.conf.5.en.html)) */etc/radvd.conf* file : 
 ```
