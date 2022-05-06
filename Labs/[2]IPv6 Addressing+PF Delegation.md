@@ -89,9 +89,11 @@ r1[sysctl]= "net.ipv6.conf.all.accept_ra=0"
 ```
 on *startup file* only on `privileged mode` :
 ```bash
+sysctl -r 'flag_name' net #search for all flags inside
 sysctl -w net.ipv6.conf.all.(flag_name) = (boolean/number)
 sysctl (dot-notation variable)  ##show flag value
 ```
+saved on `/etc/sysctl.d/99-sysctl.conf` configuration file 
 |Used Flags| net.ipv6.conf.all.*|
 |--|--|
 |.forwarding|boolean - behave like a Router - packets received on this interfaces can be forwarded|
