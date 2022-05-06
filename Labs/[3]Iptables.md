@@ -97,9 +97,9 @@ When the rule is set the linux kernel will print some information on all matchin
 # add further information to the front of all messages produced by the logging action
 --log-prefix pfx 
 ```
-- exmaples:
+- examples:
 ```bash
-# Log fowarded packets
+# Log forward packets
 $ iptables -A FORWARD -p tcp -j LOG --log-level info --log-prefix "Forward INFO"
 
 # Log and drop invalid packets
@@ -119,7 +119,7 @@ $ iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
   - Flows : [TCP](https://book.huihoo.com/iptables-tutorial/x4436.htm) - [UDP](https://book.huihoo.com/iptables-tutorial/x4596.htm) - [ICMP](https://book.huihoo.com/iptables-tutorial/x4634.htm)
   - **-m state --state [s]** 
 
-|"s"|packet is ...|
+|[s]|packet is ...|
 |--|--|
 |NEW |start of a new\un-established connection|
 |ESTABLISHED |part of a connection already registered in the kernel or established |
