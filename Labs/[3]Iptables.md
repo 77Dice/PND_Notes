@@ -19,14 +19,20 @@ each table defines a different kind of operation that can be perform over the pa
 
 - **filter** => filtering of packets : allow or block packets (accept/drop), every packet pass through this table
   - (INPUT / OUTPUT / FORWARD)
-- **nat** => address-port translation (SNAT/DNAT/MASQUERADE) : the first packet of a connection pass through this table then its result define behavior of next packets belonging to the same connection
+  - FORWARD chain is accessible only if machine is configured as router ( net.ipvX.ip_forward = 1 in /etc/sysctl.conf )
+
+- **nat** => network address-port translation (SNAT/DNAT/MASQUERADE) : the *first packet* of a connection pass through this table then its result define behavior of next packets belonging to the same connection
   - (PRE_ROUTING / POST_ROUTING / OUTPUT)
+  - special targets (DNAT / SNAT / MASQUERADE / REDIRECT)
 - **mangle** => packet header modification (QoS), every packet pass through this table and contain all predefined chains
   - (PRE_ROUTING / POST_ROUTING / INPUT / OUTPUT / FORWARD )
-- **raw** => avoid connection tracking
+- **raw** => avoid connection tracking (exceptions to conntracking) has **highest priority** over tables
   - (PRE_ROUTING / OUTPUT)
 
 ## built-in chains
+
+- MANGLE > NAT > FILTER
+- RAW > MANGLE
 
 > ![picture 1](../images/757f07dd756b276a90b3bd92a17b96a140eb2ed35cdd70c5e495ec8306c1f753.png)  
 
@@ -68,6 +74,39 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
   | MASQUERADE | as SNAT but for dynamically assigned IP connections, *we set the IP address used on a specific network interface instead of the (--to-source) option* (**only** for NAT table and POST_ROUTING chain)
   | ... | [other_TARGETS](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html#TARGETS)
 
+## User defined chains 
+
+- It's possible to specify a *jump rule* to a different user chain **within the same table**
+
+> ![picture 2](../images/user_chains.jpg)  
+
+- policy in not applied to user defined chains; they simply jump back to the next rule in the main chain
+
+## iptables logging 
+
+**Target** -> LOG 
+- non-terminating target -> matching packets continue to the next rule
+ 
+When the rule is set the linux kernel will print some information on all matching packets via the *kernel log*
+
+- it can be then read with dmegs or [syslogd(8)](https://linux.die.net/man/8/syslogd)
+
+```bash 
+# specifies type of log (emerg, alert, crit, err, warning, notice, info, debug)
+--log-level lv 
+# add further information to the front of all messages produced by the logging action
+--log-prefix pfx 
+```
+- exmaples:
+```bash
+# Log fowarded packets
+$ iptables -A FORWARD -p tcp -j LOG --log-level info --log-prefix "Forward INFO"
+
+# Log and drop invalid packets
+$ iptables -A INPUT -m conntrack --ctstate INVALID -j LOG --log-prefix "Invalid packet"
+
+$ iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+```
 # Stateful packet filtering 
 
 ## Connection Tracking machine 
