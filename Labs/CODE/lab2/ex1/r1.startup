@@ -4,7 +4,6 @@ ip addr flush eth1
 ifup -a
 ifquery -l
 
-#SEMBRA CHE AL ROUTER NON SERVANO DEFINIRE ALTRE ROUTE O DEFAUL ROUTE COME INVECE
-# AVVENIVA CON IPV4  ..... WHY???????
+# non need 
 #ip -6 route add 2001:DB8:CAFE:1::/64 via fe80::1 dev eth0
 #ip -6 route add 2001:DB8:CAFE:2::/64 via fe80::1 dev eth1
