@@ -11,7 +11,7 @@
 |ip link set ethx [up\down]  | plug-unplug cable  |  			    
 |ip addr \ ip a show [dev ethx]  | show ip address  | 
 |ip addr [add\del] a.b.c.d/m dev ethx  | add/remove ip address |			    
-|ip addr flush [dev ethx]  | remove any assigned address |
+|ip addr flush [dev ethx]  | **destroy interface** and remove any assigned address |
 |ip addr replace a.b.c.d/m dev ethx  | instead of flush+add during startup   |
 |ip route \ ip r [list\flush]  | list\flush routing table |	 
 |ip route [add\del] a.b.c.d/m via [next_hop]  | add/del route by next hop|			    
@@ -49,7 +49,7 @@
   - The netmask (defines Network/host portion of IP address)
   - The IP address of its Default Gateway (device in local network `able to access` the Distribution layer)
   - The IP address of a DNS (a remote server `able to translate` human intelligible names to IP addresses)
-  - definition of MTU as shown :
+  - definition of MTU :
 ```bash
       sudo ip link set eth0 mtu 1400 
       ifconfig emX mtu 1400
