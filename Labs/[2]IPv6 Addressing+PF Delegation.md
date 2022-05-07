@@ -245,9 +245,10 @@ dnsmasq -d (debug mode) -k(run as normal) -p(def listening port)
 # restart on the run
 systemctl restart|start|status dnsmasq 
 ```
-
-### HW1) dnsmasq.conf file 
+* * *
+## [HW1] dnsmasq.conf file 
 > [guide IPv6_dnsmasq](https://www.youtube.com/watch?v=zGnpZnxWQ5c)
+
 ```bash
 # show lines changed 
 $ grep -E "^(#|$)" /etc/dnsmasq.conf -nv
@@ -259,7 +260,48 @@ bind-interfaces
 expand-hosts
 domain=acme-21.test
 ```
+- dnsserver **/etc/hosts** file 
+```bash
+127.0.0.1       localhost
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+# --- BEGIN PVE ---
+100.100.1.2 dnsserver.acme-21.test dnsserver
+# --- END PVE ---
+2001:470:b5b8:1581:4cb9:6d5b:77e3:2156 dnsserver.acme-21.test dnsserver
+## one for every client to manage
+100.100.1.3 logserver logserver.acme-21.test
+2001:470:b5b8:1581:44aa:495e:4a0f:3b95 logserver logserver.acme-21.test
 
+100.100.6.2 webserver webserver.acme-21.test
+2001:470:b5b8:1506:d869:106b:4190:ae48 webserver webserver.acme-21.test
+
+100.100.6.3 proxyserver proxyserver.acme-21.test
+2001:470:b5b8:1506:8e52:6e61:5c89:46f2 proxyserver proxyserver.acme-21.test
+
+100.100.4.2 client-ext-1 client-ext-1.acme-21.test
+2001:470:b5b8:1504:b87e:3b23:aeca:3f64 client-ext-1 client-ext-1.acme-21.test
+
+100.100.2.100 client-int-1 client-int-1.acme-21.test
+2001:470:b5b8:1582:a59:f803:4a67:51c9 client-int-1 client-int-1.acme-21.test
+```
+inside clients:
+- **/etc/sysctl.d/99-sysctl.conf** file 
+  - set .addr_gen_mode **max to 2**
+  - if =3 they continuously change addr and therefore dns cannot work
+  - add stable secret; otherwise IPv6 cannot create addr with it 
+```bash
+net.ipv6.conf.eth0.addr_gen_mode=2
+net.ipv6.conf.eth0.stable_secret=(some IPv6 addr)
+```
+- **/etc/resolv.conf** file
+```bash
+## dns server ip addr 
+nameserver 100.100.1.2
+nameserver 2001:470:b5b8:1581:ec6c:35ff:fec7:776f
+```
+* * *
 ## Dibbler Client
 
 > ([man_Page](https://manpages.debian.org/testing/dibbler-client/dibbler-client.8.en.html)) is a portable implementation of the `DHCPv6 client`
