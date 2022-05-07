@@ -202,6 +202,8 @@ it works...
 > *home/user/.conf/kathara.conf* \
 >  "hosthome_mount" : true --> `shared` folder will be availabe for exchange of files...
 
+# Lab1 Activity 
+
 ### ex1 
 
 > GOAL: Manually configure pc1-3 in order to be in the same network than r1 as 192.168.100.30/29

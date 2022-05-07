@@ -1,0 +1,8 @@
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+umount /etc/resolv.conf
+dpkg -i --force-confold /shared/*.deb
+
+chmod +x /etc/dibbler/client-notify.sh
+dibbler-client start
+radvd -m logfile -l /var/log/radvd.log
+

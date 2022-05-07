@@ -312,6 +312,7 @@ ff02::2         ip6-allrouters
 we configure client inside ***/etc/dibbler/client.conf*** file
 >  - ([DIBBLER-portable guide](https://klub.com.pl/dhcpv6/doc/dibbler-user.pdf)) :: as for dnsmasq also for dibbler configuration files `for every option we have comments and descriptions` 
 >   - to enable an option just uncomment specific row
+>   - search for (**6.7 Client reference**), for a list of parameters allowed in the client configuration file
 
 general `/etc/dibbler/client.conf` file :
 
@@ -349,9 +350,7 @@ dibbler-client status
 dibbler-client start/stop
 ```
 
-# prefix delegation + MTU + ex4-5-6
-
-
+# Lab2 Activity
 ### EX1
 
 > GOAL: to configure the topology to use static IPv6 addresses.You have to provide static GUA addresses to the machines in the topology, `both link-local and GUA`
@@ -476,3 +475,88 @@ pcx[sysctl]="net.ipv6.conf.all.addr_gen_mode=0"
         dibbler-client start
         ```
         
+### EX4
+
+> GOAL : The router has **to ask prefixes** to its ISP and has **to distribute addresses** inside the two lans, using SLAAC
+
+The ISP is already configure to provide prefixes(**dibbler-server + radvd**);
+
+while the router and the pcs have to be configured
+
+    2 ways 
+    ->
+    (dibbler+radvd) or (dhpc6client + dnsmasq)
+- dibblerClient + radvd -->
+  - router1)
+    - `/etc/dibbler/client.conf` file :
+      ```bash
+      log-level 7
+      log-mode syslog
+      skip-confirm
+      script "/etc/dibbler/client-notify.sh"
+
+      # When client receives prefix from upstream router,
+      # it attempts to split it into remaining interfaces
+      downlink-prefix-ifaces eth1,"eth2"
+      # after first "...ethx..."
+
+      iface eth0{
+        # client’s request for prefix delegation
+        pd 
+        # client’s request for a single normal address
+        ia
+        # allow for rapid commit procedure
+        # server must be configured to allow rapid commit, too
+        rapid-commit 1
+        # ask for options
+        option dns-server
+        option domain
+      }
+      ```
+    - we need script **to make router assigning an address** to the interface connected to the ISP prefix server while radvd advertise through SLAAC in the LANs
+    - `/etc/dibbler/client-notify.sh` file --> find it [online ](https://github.com/tomaszmrugalski/dibbler/blob/master/scripts/notify-scripts/client-notify-linux.sh)
+      ```bash
+      https://github.com/tomaszmrugalski/dibbler/blob/master/scripts/notify-scripts/client-notify-linux.sh
+      ```
+    - `/etc/radvd.conf` file :
+      ```bash
+      interface eth1
+      {
+          AdvSendAdvert on;
+          #no dhcpv6 server here 
+          AdvManagedFlag off;
+          # no options
+          AdvOtherConfFlag off;
+          AdvDefaultPreference high;
+          # AdvLinkMTU 1500;
+          prefix 2001:db8:fade:1::/64 {
+              AdvOnLink on;
+              AdvAutonomous on;
+              AdvRouterAddr on;
+          };
+      };
+      interface eth2
+      {
+          AdvSendAdvert on;
+          AdvDefaultPreference high;
+          prefix 2001:db8:fade:2::/64 {
+              AdvOnLink on;
+              AdvAutonomous on;
+              AdvRouterAddr on;
+          };
+      };
+      ```
+    - `/r1.startup` file :
+      ```bash
+      chmod +x /etc/dibbler/client-notify.sh
+      dibbler-client start
+      radvd -m logfile -l /var/log/radvd.log
+      ```
+  - clients)
+    - needs only `net.ipv6.conf.all.accept_ra=1` flag to enable SLAAC  
+- (dhpc6client + dnsmasq)
+  - ...
+
+### EX5
+
+> GOAL : ...

@@ -217,7 +217,7 @@ iptables-legacy-save > iptables_rules.sh
 iptables-legacy-restore < iptables_rules.sh
 ```
 
-# Lab Activity
+# Lab4 Activity
 - add **alias** makes rules easier 
 ```bash
   echo 192.168.10.2 local_host >> /etc/hosts

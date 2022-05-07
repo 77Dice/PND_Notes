@@ -1,10 +1,6 @@
-slide 12 : 7 APRILE
+# Lab4 Activity
 
 
-
-
-
-# LAB4 related
 SLIDE 11 : 5 aprile
 
 
