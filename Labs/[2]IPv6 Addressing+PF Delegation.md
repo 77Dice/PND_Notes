@@ -105,7 +105,7 @@ saved on `/etc/sysctl.d/99-sysctl.conf` configuration file
 |.addr_gen_mode|define `how` link-local and autoconf `addr are generated`|
 |..|0-> EUI-64 (default)|
 |..|1-> DO NOT generate link-local + EUI-64 for autoconf addr|
-|..|2-> generate `stable privacy addresses` using stable secret ([RFC7217](https://datatracker.ietf.org/doc/html/rfc7217)) - balance privacy and stability|
+|..|2-> generate `stable privacy addresses` using stable secret ([RFC7217](https://datatracker.ietf.org/doc/html/rfc7217)) - balance privacy and stability (**works only if stable secret is set**)|
 |..|3-> generate `stable privacy addresses` using random secret|
 |.stable_secret|IPv6 addr - this address will be used as `secret` to generate IPv6 addr for link local and autoconf ones|
 |..|Writes to conf/all/stable_secret are refused ; It is recommended to generate this secret `during startup` and `keep it stable` after that|
@@ -243,7 +243,21 @@ dnsmasq --test
 # start dnsmasq
 dnsmasq -d (debug mode) -k(run as normal) -p(def listening port)
 # restart on the run
-systemctl restart dnsmasq 
+systemctl restart|start|status dnsmasq 
+```
+
+### HW1) dnsmasq.conf file 
+> [guide IPv6_dnsmasq](https://www.youtube.com/watch?v=zGnpZnxWQ5c)
+```bash
+# show lines changed 
+$ grep -E "^(#|$)" /etc/dnsmasq.conf -nv
+bogus-priv
+local=/acme-21.test/
+listen-address:100.100.1.2,127.0.0.1,2001:470:b5d8:1581..DNSIPv6Addr...
+no-dhcp-interfaces=eth0
+bind-interfaces
+expand-hosts
+domain=acme-21.test
 ```
 
 ## Dibbler Client
