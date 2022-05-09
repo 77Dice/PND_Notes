@@ -69,7 +69,7 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
   | RETURN | packet go to default policy of current chain, if sub-chain then travel through superior chain
   | REJECT | equal to DROP + send back ICMP error (**only** for filter table and its chains) 
   | LOG | logging packets, debugging of rules if used instead of DROP ([syslogd](https://linux.die.net/man/8/syslogd))
-  | DNAT | override IP destination address of packet and *all subsequent packets in the same stream* (**only** for NAT table and PRE_ROUTING + OUTPUT chains) 
+  | DNAT | (--to-destination) override IP destination address of packet and *all subsequent packets in the same stream* (**only** for NAT table and PRE_ROUTING + OUTPUT chains) 
   | SNAT | (--to-source) override IP source address of packet, used when multiple hosts share same Public IP Address (**only** for NAT table and POST_ROUTING chain)
   | MASQUERADE | as SNAT but for dynamically assigned IP connections, *we set the IP address used on a specific network interface instead of the (--to-source) option* (**only** for NAT table and POST_ROUTING chain)
   | ... | [other_TARGETS](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html#TARGETS)
@@ -304,29 +304,47 @@ $ wget http://[IPv6_address]:port
 
 -P FORWARD DROP
 ```
+### EX4
+
+> GOAL : masquerade all traffic
+- if we try to ping or request a page from internal we don't receive any reply message
+- that's because pc has *private address* and this is **not Routable** so reply never comes back
+- this is because the **source address** used is **not routable** 
+```bash
+# eth1 is external interface
+$ iptables -t NAT -A POSTROUTING -o eth1 -j MASQUERADE
+```
+- SNAT : router **has routable address** so It  needs to change source address and perform requests for private clients 
+
+> Remember that with SNAT only : external hosts **cannot reach private network** or make any requests/connections
+
+### EX5
+
+> GOAL : make reachable internal Services via DNAT
+- "when you have a host running your web server inside a LAN, but no real IP to give it that will work on the Internet"
+- we want **to reach internal hosts of LAN** via **DNAT -> port forwarding**
+```bash
+# ssh for pc1
+$ iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22 -j NAT --to-destination 192.168.10.22:22
+# http for s1
+$ iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j NAT --to-destination 192.168.10.18:80
+```
+- now external hosts needs to make requests **directed to natting router**; they will be forwarded to private hosts
+- No need to use SNAT in this case : rule will be *applied to all related packets* 
+
+### EX6
+
+> GOAL : config. portforwarding for multiple ports and block traffic on other ports
+```bash
+# eth2 is external interface
+-t nat -A POSTROUTING -o eth2 -j MASQUERADE
+# same structure for 80,8080,443,2222 ,22,8088
+-t nat -A PREROUTING -i eth2 -p tcp --dport 22 -j DNAT --to-destination s1:22
+
+-A FORWARD -p tcp -m multiport ! --dports 22,80,443,2222,8080,8088 -j REJECT
+```
+### EX7
+
+> GOAL : Make fw1 to be a transparent firewall
 
 
-
-slide 12 : 7 APRILE
-
-
-
-
-
-# LAB4 related ex4//7
-SLIDE 11 : 5 aprile
-
-
-- exists NOT ROUTABLE addresses and only public ADDR are routable
-- different types of NAT
-  - source / port / destination / 
-- tap table inside iptables 
-
-+ lab4
-
-> 
-
-
-[link1](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)
-
-[link2](https://www.computernetworkingnotes.com/)

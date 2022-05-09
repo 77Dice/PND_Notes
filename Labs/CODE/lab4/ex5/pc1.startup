@@ -1,0 +1,9 @@
+ip link set eth0 address 02:42:ac:2d:00:04
+umount /etc/resolv.conf
+dhclient eth0
+
+
+
+adduser user --disabled-login --quiet --gecos ""
+echo "user:password" | chpasswd
+/etc/init.d/ssh start

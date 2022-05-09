@@ -16,7 +16,8 @@
 
 ## Neighbour Discovery Protocol(NDP)
 
->([Wiki](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)) Its a *Link Layer Protocol* and it defines five pakets types(13x) used for:
+> [NDP_explained](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)
+-- [Wiki](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol) :  Its a *Link Layer Protocol* and it defines five pakets types(13x) used for:
 
 ### IPv6 Address Resolution (IPv4 ARP):
 

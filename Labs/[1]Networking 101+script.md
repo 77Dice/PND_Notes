@@ -83,8 +83,6 @@
 
 ## Host Connection Script
 
-works on: lab2/ex1
-
 > how connect `host machine` to `VM` (guest machine)?
 
 > after starting the lab we need to link one collision domain(local net) to a `virtual interface` ($veth_x\ veth_y$)
@@ -125,7 +123,7 @@ ping -I veth0 2001:db8:cafe:2::10x  # (all lab is reachable)
 it works...
 ./connect-lab .sh (a .b. c.d /x) ( lan_name ) # connect to broadcast domain with given IP address
 ```
-
+> - [bridged NICs](https://wiki.debian.org/BridgeNetworkConnections)
 ## Network Traffic Monitoring
 
 > Packets flow in the network, to capture them use a `network traffic dump tool` like:
@@ -173,7 +171,7 @@ it works...
 
 > when capturing on vm remember to save file.pcap on */shared* folder 
 
-| tcpdump | (on listener Host) |
+| tcpdump(on listener Host) | ([tcpdump-manPage](https://www.tcpdump.org/manpages/tcpdump.1.html)) |
 |--|--|
 | (ctrl+z) + | (bg) |
 | tcpdump -ni [ethx/any] -w /shared/file.pcap | (-n) not resolve DNS (-i) define interface (-w) write on |
