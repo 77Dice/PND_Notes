@@ -346,5 +346,12 @@ $ iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j NAT --to-destinatio
 ### EX7
 
 > GOAL : Make fw1 to be a transparent firewall
-
-
+- as a transparent bridge we can monitor/modulate traffic without create 2 separated networks
+- firewall is not exposed on the network but **has Link-Local Addr**
+```bash
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 eth1
+ip link set br0 up
+```
+> [brctl_man](https://linux.die.net/man/8/brctl)
