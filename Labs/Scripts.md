@@ -55,6 +55,3 @@ done
 xrdb ../.XDefaults.alt
 xterm -e bash -c "kathara connect r1" &
 ```
-
-It works...
-
