@@ -1,13 +1,19 @@
 
 # Network Eavesdropping/Sniffing 
 
-> *capture packets from the network and read it in search of sensitive information* ([Sniffing](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing.htm))
-> 
-> [Network Sniffers](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing_tools.htm)
+> GOAL : *capture packets transmitted by other's nodes through the network and analyze it in search of sensitive information*([Sniffing](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing.htm)) 
+> - all clear data *exchanged by unsafe protocols* : **without encryption**
+>   - *HTTP, SMTP, POP, FTP, IMAP, DNS...*
 
+> Tools $\rightarrowtail$ [Network Sniffers](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing_tools.htm) + protocol decoders or stream reassembling
+
+## What it requires?
++ Passive or active mode
 - work in passive/active mode ,++ promisquous mode  :: 
+
+mode link :: [relative link to promisc mode](/Labs/%5B1%5DNetworking%20101%2Bscript.md#Network%5FTraffic%5FMonitoring)
 - use tools ... list 
-- capture all clear data sent by unsafe protocols (without encryption on the medium)
+- capture 
 
 -  how do it ?
    -  NIC in promisquous mode 
@@ -26,6 +32,10 @@
 - how break the switch segmentation mechanism??
   - CAM overflow ..
 
+
+
+***
+
 # ARP spoofing/poisoning
 
 how it works + ARP table
@@ -36,7 +46,7 @@ how it works + ARP table
   - MITM attack
 
 
-# IPv6 Neighbor Discovery
+# IPv6 Neighbor Discovery --- ARP poisoning for IPv4
 IPv6 Neighbor Discovery threats
 
 - how addr resolution works in IPv6?
