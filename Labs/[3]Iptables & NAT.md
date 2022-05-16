@@ -69,7 +69,7 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
   | RETURN | packet go to default policy of current chain, if sub-chain then travel through superior chain
   | REJECT | equal to DROP + send back ICMP error (**only** for filter table and its chains) 
   | LOG | logging packets, debugging of rules if used instead of DROP ([syslogd](https://linux.die.net/man/8/syslogd))
-  | DNAT | (--to-destination) override IP destination address of packet and *all subsequent packets in the same stream* (**only** for NAT table and PRE_ROUTING + OUTPUT chains) 
+  | DNAT | (--to-destination) override IP destination address of packet and *all subsequent packets in the same stream* (**only** for NAT table and PRE_ROUTING chain) *"`OUTPUT` chain is possible but `not used`"* 
   | SNAT | (--to-source) override IP source address of packet, used when multiple hosts share same Public IP Address (**only** for NAT table and POST_ROUTING chain)
   | MASQUERADE | as SNAT but for dynamically assigned IP connections, *we set the IP address used on a specific network interface instead of the (--to-source) option* (**only** for NAT table and POST_ROUTING chain)
   | ... | [other_TARGETS](https://www.frozentux.net/iptables-tutorial/iptables-tutorial.html#TARGETS)
@@ -85,7 +85,7 @@ Every packet pass through a set of hook-chains of multiple tables, each rule ins
 ## iptables logging 
 
 **Target** -> LOG 
-- non-terminating target -> matching packets continue to the next rule
+- `non-terminating target` -> matching packets continue to the next rule
  
 When the rule is set the linux kernel will print some information on all matching packets via the *kernel log*
 
@@ -141,10 +141,10 @@ $ iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
 - tables as small letters // chains as CAPITAL LETTERS
 - commands as CAPITAL LETTERS // option as small letters
 
-|-L --list options | --  | 
+|-L options | --list  | 
 |--|--|
 |-v | verbose|
-|-n | numerical values, no name resolv |
+|-n | numerical values, **no name resolv** |
 |--line-numbers | show rule number|
 |-L -v -f filter | show **number** of packets **matched** by the rule |
 |**[Cmds+Options_tutorial](https://book.huihoo.com/iptables-tutorial/x5245.htm)**|**[Jump to other Chains_example](https://www.frozentux.net/iptables-tutorial/chunkyhtml/c3965.html)**|

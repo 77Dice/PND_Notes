@@ -1,7 +1,9 @@
 
-# Network Sniffing 
+# Network Eavesdropping/Sniffing 
 
->  [sniffing](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing.htm) : [tools](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing_tools.htm)
+> *capture packets from the network and read it in search of sensitive information* ([Sniffing](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing.htm))
+> 
+> [Network Sniffers](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_sniffing_tools.htm)
 
 - work in passive/active mode ,++ promisquous mode  :: 
 - use tools ... list 

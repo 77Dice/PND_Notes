@@ -175,6 +175,7 @@ it works...
 |--|--|
 | (ctrl+z) + | (bg) |
 | tcpdump -ni [ethx/any] -w /shared/file.pcap | (-n) not resolve DNS (-i) define interface (-w) write on |
+|... udp port 53|capture DNS queries|
 
 |ports check |([ss-guide](https://phoenixnap.com/kb/ss-command#)) |
 |--|--|
