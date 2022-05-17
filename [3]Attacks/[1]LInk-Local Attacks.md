@@ -28,7 +28,7 @@
 >   
 >   - Ethernet or lv2-related segments
 >   - separate collision domains + same Lv3 Network
->   - **Forwarding** techniques : store and forward, Cut through, Adaptive switching ...   
+>   - **Forwarding** techniques : store and forward, Cut through, ...   
 >   - Regenerate segments **only towards destination** segment
 >   - Broadcast frame : flood the frame to all ports of the bridge *except the one from which it was received*
 > 
@@ -44,7 +44,7 @@
 
 |device|table | what maps? |
 |--| --|-- |
-|hosts|Address Resolution Protocol(ARP) |MAC addr <-> IP addr|
+|hosts|**[Address Resolution Protocol(ARP)](https://en.wikipedia.org/wiki/Address_Resolution_Protocol)** |MAC addr <-> IP addr|
 |Switches|**[Content Addressable Memory(CAM)](https://www.greycampus.com/opencampus/ethical-hacking/arp-and-cam-cable)** | MAC addr <-> Switch Port <-> VLAN params|
 |Bridges|**[Forwarding Information Base(FIB)](https://en.wikipedia.org/wiki/Forwarding_information_base)**|MAC addr <-> Bridge port|
 
@@ -65,27 +65,21 @@ Possible fix? --> **make it efficient** : use **hash fx** to place MAC inside CA
 
 Today prevention --> **port security**
   - *Limit amount of* MAC addresses per port
-  - maintain small *secure MAC* in addition
+  - maintain small *secure MACs* 
   - detect anomalies and block offending MAC or *shut down the port*
 
-# ARP Poisoning/Spoofing
+# ARP Spoofing/Poisoning
 
-> GOAL : *attacker sends (spoofed/forged) ARP messages: the aim is to associate the attacker's MAC address with the IP address of another host (default gateway), causing any traffic meant for that IP address to be sent to the attacker instead*([ARP Poisoning](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_arp_poisoning.htm))
-> - Passive/Active attack
-> - ARP has **no authentication**
->   - Possible following attacks : DOS / MITM 
+> GOAL : *to associate the attacker's MAC address with the IP address of another host (default gateway, DNS, hosts...) causing any traffic meant for that IP address to be sent to the attacker instead*([ARP Poisoning](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_arp_poisoning.htm))
+> - *Passive/Active attack* type
+>   - ARP spoofing is used **as opening for other attacks** 
+>   - DOS / MITM / Session hijacking  
+> - ARP has **no authentication mechanism of source host**
+>   - this is a Vulnerability of the protocol
+>   - attacker can send (spoofed/forged) ARP messages and redirect traffic
 
-## What does it require? 
+[Gratuitous ARP response](https://www.practicalnetworking.net/series/arp/gratuitous-arp/) : *broadcast packet* used by hosts to “announce” their IP address to the local network *without any ARP request*
 
-1. Overload switch with forged ARP packets
-2. after flooding (ma allora devo rompere lo switching o no??: e' un mezzo ma non il fine !!!)
-3. first flood and then sniff and then forge packets ??
-
-- responses 
-- security of ARP
-- type of attacks :
-  - DOS
-  - MITM attack
 
 
 # IPv6 Neighbor Discovery --- ARP poisoning for IPv4
