@@ -72,6 +72,7 @@ Today prevention --> **port security**
 
 > GOAL : *to associate the attacker's MAC address with the IP address of another host (default gateway, DNS, hosts...) causing any traffic meant for that IP address to be sent to the attacker instead*([ARP Poisoning](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_arp_poisoning.htm))
 > - *Passive/Active attack* type
+>   - *pretend to be anybody*
 >   - ARP spoofing is used **as opening for other attacks** 
 >   - DOS / MITM / Session hijacking  
 > - ARP has **no authentication mechanism of source host**
@@ -80,7 +81,7 @@ Today prevention --> **port security**
 
 [Gratuitous ARP response](https://www.practicalnetworking.net/series/arp/gratuitous-arp/) : *broadcast packet* used by hosts to “announce” their IP address to the local network *without any ARP request*
 
-
+Attacker can flood network with Gratuitous ARP responses and hosts will link IP of default GW with MAC address of Attacker
 
 # IPv6 Neighbor Discovery --- ARP poisoning for IPv4
 IPv6 Neighbor Discovery threats
