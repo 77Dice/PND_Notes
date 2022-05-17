@@ -14,20 +14,20 @@
 
 # IPv6 Dynamic Address Configuration
 
-## Neighbour Discovery Protocol(NDP)
+## Neighbor Discovery Protocol(NDP)
 
 > [NDP_explained](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)
 -- [Wiki](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol) :  Its a *Link Layer Protocol* and it defines five pakets types(13x) used for:
 
 ### IPv6 Address Resolution (IPv4 ARP):
 
-given IPv6 address an host want to know the related `mac of its neighbours` and insert it in the Neighbour Cache using:
-- (`135`)Neighbour Solicitation Message: Host asking for `Link-Layer Address(MAC)` of another Host; 
+given IPv6 address, a host want to know the related `mac of its Neighbors` and insert it in the Neighbor Cache using:
+- (`135`)Neighbor Solicitation Message: Host asking for `Link-Layer Address(MAC)` of another Host; 
 	- `Multicast Request` to find out address of new hosts ([to solicited node](https://en.wikipedia.org/wiki/Solicited-node_multicast_address)):
 		- host subscribe to *multicast Group* that correspond to its MAC
-		- every time someone wants to reach him they just send a Neighbour Sollicitation to its Multicast Group 
+		- every time someone wants to reach him they just send a Neighbor Solicitation to its Multicast Group 
 	- `Unicast Request` just to verify if host is reachable or not
-- (`136`)Neighbour Advertisement Message: answer to Neighbour Sollicitation message
+- (`136`)Neighbor Advertisement Message: answer to Neighbor Solicitation message
 
 > When a host connects to a new network, It sends a `Neighbour Solicitation` with multicast destination
 

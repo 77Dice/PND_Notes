@@ -83,9 +83,10 @@ Today prevention --> **port security**
 
 Attacker can flood network with Gratuitous ARP responses and hosts will link IP of default GW with MAC address of Attacker
 
-# IPv6 Neighbor Discovery --- ARP poisoning for IPv4
-IPv6 Neighbor Discovery threats
+# IPv6 Neighbor Discovery threats
 
+ > As ARP poisoning for IPv4
+[link](/[1]IPv6/[2]IPv6%20ICMPv6+NDP+SLAAC+DAD.md#Neighbor%20Discovery%20Protocol(NDP)) Neighbor%20Discovery%20Protocol(NDP)
 - how addr resolution works in IPv6?
 
 - known threats  RFC 3756
