@@ -85,16 +85,21 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 
 # IPv6 Neighbor Discovery threats
 
- > As ARP poisoning for IPv4
-[link](/[1]IPv6/[2]IPv6%20ICMPv6+NDP+SLAAC+DAD.md#Neighbor%20Discovery%20Protocol(NDP)) Neighbor%20Discovery%20Protocol(NDP)
-- how addr resolution works in IPv6?
+ > As ARP for IPv4 : [NDP_refresh](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)(Neigh Solic/Adv) + Duplicate Address Detection(DAD) + ICMPv6 redirect
+ > - **NDP known threats : [RFC 3756](https://datatracker.ietf.org/doc/html/rfc3756)** 
+ > - [THC-IPV6-ATTACK-TOOLKIT](https://github.com/vanhauser-thc/thc-ipv6)
+ > - [SI6 Networks IPv6 Toolkit](https://github.com/fgont/ipv6toolkit)
 
-- known threats  RFC 3756
+#### DAD Dos
+> Always answering to any Neigh Solicitation in DAD protocol
+#### Rouge RA
+> when receive RA You take it for good and then *when using VPN* attacker force you to **bypass VPN** (tunnel split) 
+#### RA flooding 
+> generate lots of (RA) (heavy to compute)
+#### DHCP rouge server/DHCP starvation
+> Dos a network by requestiong all the available DHCP addresses and then **provide addr** to hosts and **impersonate** DHCP, DNS server and default GW
 
-● IPv6 Rogue RA (or RA spoofing)
-● Rogue DHCP
-
-
+# Lab3 Activity
 
 FORSE POSSO METTERE TUTTO DENTRO I LAB...
 
