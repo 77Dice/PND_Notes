@@ -101,7 +101,15 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 
 # Lab3 Activity
 
-FORSE POSSO METTERE TUTTO DENTRO I LAB...
+### EX1
 
- 
- ++ LAB 3 Activity
+> GOAL : Join the network and eavesdrop the traffic in kathara
+
+
+## ICMP redirect Attack
+
+slide 15 
+### EX4/5
+how redirect ..
+
+solution >>> reject redirect packets !!!!!
