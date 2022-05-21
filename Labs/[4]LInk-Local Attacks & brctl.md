@@ -23,8 +23,10 @@
 
 ### Bridges & Switches 
 
+> reference: **[bridged NICs](https://wiki.debian.org/BridgeNetworkConnections)|[veth(4)](https://man7.org/linux/man-pages/man4/veth.4.html)|[bridging commands](https://developers.redhat.com/articles/2022/04/06/introduction-linux-bridging-commands-and-features#)**
+
 > What they are?
-> - Simple [Network Bridge](https://en.wikipedia.org/wiki/Network_bridge) : Lv2-device connecting 2 network segments 
+> - Simple **[Network Bridge](https://en.wikipedia.org/wiki/Network_bridge)** : Lv2-device connecting 2 network segments 
 >   
 >   - Ethernet or lv2-related segments
 >   - separate collision domains + same Lv3 Network
@@ -105,6 +107,27 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 
 > GOAL : Join the network and eavesdrop the traffic in kathara
 
+We want to use **linux bridging** and connect host machine to virtual bridge of kathara machines:
+
+> connection script: [conn_to_lab.sh](/labs/%5B1%5DNetworking%20101%2Bscript.md#Host%20Connection%20Script)
+```bash
+# add (or del) a virtual interface (pair veth0@veth1)
+$ ip link add dev veth0 type veth peer name veth1
+# connect one veth end to the virtual bridge
+# br0 --> brctl show | grep kt-
+$ ip link set master br0 dev veth1
+# assign an IP address to the other end (not enslaved):
+$ ip addr add x.x.x.x/y dev veth0
+# enable both the ends of the virtual interface
+$ ip link set veth0 up  
+$ ip link set veth1 up  
+```
+
+### EX2
+
+> GOAL : install **[bettercap](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)** and perform a MITM attack through **ARP poisoning** 
+> 
+> Victim machine can be host machine: 192.168.100.200/24
 
 ## ICMP redirect Attack
 

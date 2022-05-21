@@ -123,7 +123,7 @@ ping -I veth0 2001:db8:cafe:2::10x  # (all lab is reachable)
 it works...
 ./connect-lab .sh (a .b. c.d /x) ( lan_name ) # connect to broadcast domain with given IP address
 ```
-> - [bridged NICs](https://wiki.debian.org/BridgeNetworkConnections)
+
 ## Network Traffic Monitoring
 
 > Packets flow in the network, to capture them use a `network traffic dump tool` like:
