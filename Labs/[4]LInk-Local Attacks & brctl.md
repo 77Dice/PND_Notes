@@ -9,8 +9,8 @@
 
 ## What does it require?
 
-- NIC in [Promiscuous mode](/Labs/%5B1%5DNetworking%20101%2Bscript.md#Network%20Traffic%20Monitoring) : pass all the observable traffic without discrimination to the CPU
-- Sniffer placed *along the path* or the `same Broadcast domain`
+- NIC in **[Promiscuous mode](/Labs/%5B1%5DNetworking%20101%2Bscript.md#Network%20Traffic%20Monitoring)** : pass all the observable traffic without discrimination to the CPU
+- Sniffer placed *along the path* or the **same Broadcast domain**
   - in Non-switched LANs
     - networks with HUBs
   - in Switched LANs
@@ -125,7 +125,7 @@ $ ip link set veth1 up
 
 ### EX2
 
-> GOAL : install **[bettercap](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)** and perform a MITM attack through **ARP poisoning** 
+> GOAL : install **[bettercap](https://www.cyberpunk.rs/install-mitm-attack-framework-bettercap)** and perform a MITM attack through **ARP poisoning** 
 > 
 > Victim machine can be host machine: 192.168.100.200/24
 
