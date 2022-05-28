@@ -114,7 +114,7 @@ We want to use **linux bridging** and connect host machine to virtual bridge of 
 # add (or del) a virtual interface (pair veth0@veth1)
 $ ip link add dev veth0 type veth peer name veth1
 # connect one veth end to the virtual bridge
-# br0 --> brctl show | grep kt-
+# br0 from -->  brctl show | grep kt-
 $ ip link set master br0 dev veth1
 # assign an IP address to the other end (not enslaved):
 $ ip addr add x.x.x.x/y dev veth0
