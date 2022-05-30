@@ -167,5 +167,29 @@ trusted DHCP server
 
 ## Level 3,4 Protection (ACLs and traffic filtering)
 
-> The main tools to protect networks are **Access Control Lists (ACLs)** used for packet filtering functions
+> The main tools to protect networks are ***[Access Control Lists (ACLs)](https://en.wikipedia.org/wiki/Access-control_list)*** used for packet filtering functions
 
+- rules that routers follow to identify the type of traffic of the packets they forward by considering:
+  - (standard ACL) only IP addresses
+  - (extended ACL) IP addresses + Layer 4 header information
+
+> For the protection of networks, the primary use is to filter packets ***(packet filtering)*** according to the network's security policy
+
+- Depending on the specified policy, routers can transform packets (e.g blocked, subjected to NAT, forwarded in a VPN, etc.)
+
+### ACL for traffic filtering 
+
+- Block packets with *IP address spoofing*
+  - Through ACLs, it is possible to block all packets with source IP addresses that are **not consistent with the network topology**
+    - For example, a host in a 10.0.0.0/8 network that uses IP 11.0.0.1
+- Block packets that can lead to network mapping (scanning)
+  - use ACLs *to block UDP or ICMP packets from outside* the web that may reveal information about the internal structure
+- It's a good idea to allow only packets that correspond to the traffic expected on the network
+  - According to **the principle of the least permission**, blocking everything that is not explicitly expected to be exchanged in the network would be good
+
+### ACL to authorize only trusted sources
+
+- to limit the type of traffic of supporting protocols
+  - NTP from Trusted SRV ONLY
+  - SSH from admin hosts ONLY
+  - ICMP/SNMP from admin hosts ONLY

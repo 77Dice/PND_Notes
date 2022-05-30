@@ -101,6 +101,9 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 #### DHCP rouge server/DHCP starvation
 > Dos a network by requestiong all the available DHCP addresses and then **provide addr** to hosts and **impersonate** DHCP, DNS server and default GW
 
+#### ICMP redirect Attack
+> When multiple routers are on the same local link: one can send an ICMPv6 redirect and inform hosts to forward messages to the other router closes to the destination; this can be exploit to perform a MITM attack
+
 # Lab3 Activity
 
 ### EX1
@@ -129,9 +132,6 @@ $ ip link set veth1 up
 > 
 > Victim machine can be host machine: 192.168.100.200/24
 
-## ICMP redirect Attack
-
-slide 15 
 ### EX4/5
 how redirect ..
 
