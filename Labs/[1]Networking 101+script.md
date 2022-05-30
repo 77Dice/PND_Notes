@@ -168,7 +168,7 @@ it works...
 |--|--|
 |nc (-u) [ip-addr] [port] | TCP/UDP connection through port |
 |nc (-u) -l -p [port] | Listen on port |
-
+|nc -v -z -n -w 1 {host} {port1-portN}|**[fast port scanner](https://www.cyberciti.biz/faq/linux-port-scanning/)** |
 > when capturing on vm remember to save file.pcap on */shared* folder 
 
 | tcpdump(on listener Host) | ([tcpdump-manPage](https://www.tcpdump.org/manpages/tcpdump.1.html)) |
@@ -185,8 +185,8 @@ it works...
 |ss (options) dst :(port number or name)|for a specific destination port number or port name|
 | (-l) listening sockets (-u -t -x) udp,tcp,unix | . |
 | lsof -P -n -i(IPv4) | info about files opened by proceses |
-| netstat | connections states with localhost |
-| (-ltn) listening,tcp,no resolve | | 
+| **[netstat](https://linuxhint.com/install-netstat-command-linux/#:~:text=Netstat%20is%20a%20command%2Dline,routing%20table%2C%20and%20masquerade%20connections.)** | connections states with localhost |
+| (-ltn) listening,tcp,no resolve | netstat *[man_page](https://linux.die.net/man/8/netstat)* | 
 
 ## Network Manager
 > [NetworkManager_Guide](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
