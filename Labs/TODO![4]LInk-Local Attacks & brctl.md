@@ -104,7 +104,7 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 #### ICMP redirect Attack
 > When multiple routers are on the same local link: one can send an ICMPv6 redirect and inform hosts to forward messages to the other router closes to the destination; this can be exploit to perform a MITM attack
 
-# Lab3 Activity
+# Lab3 Activity (TO DO!!)
 
 ### EX1
 
@@ -133,6 +133,9 @@ $ ip link set veth1 up
 > Victim machine can be host machine: 192.168.100.200/24
 
 ### EX4/5
-how redirect ..
+ICMP redirect LAB 
 
-solution >>> reject redirect packets !!!!!
+
+solution >>> reject redirect + unreachable packets !!!!!
+
+
