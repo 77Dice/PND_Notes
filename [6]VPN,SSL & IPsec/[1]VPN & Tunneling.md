@@ -116,5 +116,78 @@ TCP port 443 (standard) opened on FW for the address of the device
 - FW bypassed if split tunneling is not used and user traffic is destined for hosts in DMZ
 
 # SSL Tunneling 
-- key exchange
-- heartbeat attack
+> Operation of a network connection on top of another network connection
+> - Tunneling offers the basic method for providing a VPN
+> - Enables a [PDU](https://it.wikipedia.org/wiki/Protocol_Data_Unit) to be transported from one site to another *without its contents being processed* by hosts on the route
+
+● Idea: *Encapsulate* the whole PDU in another PDU sent out on the network connecting the two sites
+- Encapsulation takes place in edge router on src. site
+- Decapsulation takes place in edge router on dst. site
+
+● Note that the host-to-host communication does not need to use IP
+
+#### Secure tunneling 
+● Idea: *Encrypt* the PDU, *and then encapsulate* it in another PDU sent out on the network connecting the two sites
+- Encryption can take place in edge router on src. site
+- Decryption can take place in edge router on dst. site
+  
+● Note: dst. address in IP header is for dst. edge router
+
+## Secure Socket Layer (SSL)
+> SSL 3.0 has become TLS standard ([RFC 2246](https://datatracker.ietf.org/doc/html/rfc2246)) with small changes
+> 
+> [Transport Layer Security](https://it.wikipedia.org/wiki/Transport_Layer_Security)
+- Applies security in the Transport layer
+- If implemented *on boundary routers* (or proxies), can provide a tunnel between two sites – typically LANs
+- Placed on top of TCP, so no need to change TCP/IP stack or OS
+- Provides secure channel (byte stream)
+  - Any TCP-based protocol
+  - https:// URIs, port 443
+  - NNTP, SIP, SMTP...
+- Optional server authentication with public key certificates
+
+> [To Protocol Overview](/[6]VPN,SSL%20&%20IPsec/[2]SSL%20protocol%20overview.md)
+
+### HTTPS: HTTP on to of TLS
+> TLS is used for exchange data using session key
+![image](/images/https.PNG)
+
+- host request Certificate of destination created by Certification Authority
+- host verify signature and Authenticity of certificate + not expired 
+  - Accepts correlation of Public key with destination site 
+- encrypt Session/symmetric Key using this Public key 
+  - TLS generate symmetric cryptography channel 
+  - exchange data with session key created
+
+## SSL VPN Architecture 
+1. SSL Portal VPN, Allow remote users to:
+  - Connect to VPN gateway from a Web browser
+  - Access services from Web site provided on gateway
+2. SSL Tunnel VPN, Allow remote users to:
+  - Access network protected by VPN gateway from Web browser allowing active content
+  - **More capabilities** than portal VPNs, as easier to provide **more services**
+
+### SSL VPN functionalities
+
+- Proxying: Intermediate device appears as true server to client. E.g. Web proxy
+- Application Translation: Conversion of information from one protocol to another
+  - e.g. Portal VPN offers translation for applications which are not Web-enabled, so users can use Web browser to access applications with no Web interface
+- Network Extension: Provision of partial or complete network access to remote users, typically via Tunnel VPN
+  - Two variants:
+  - Full tunneling: All network traffic goes through tunnel
+  - Split tunneling: Organisation’s traffic goes through tunnel, other traffic uses remote user’s default gateway
+
+### SSL VPN Security Services
+
+- **Authentication** Via strong authentication methods, such as two-factor authent., X.509 certificates, smartcards, security tokens etc.
+- **Encryption and integrity protection**: Via the use of the SSL/TLS protocol
+- **Access control**: May be per-user, per-group or per-resource
+- **Endpoint security controls**: Validate the security compliance of clients attempting to use the VPN
+- **Intrusion prevention**: Evaluates decrypted data for malicious attacks, malware etc.
+
+> ***Crypto is insufficient for Web security***
+> 
+> Trust: what does the server really know about the client?
+> - SSL provides a secure pipe. “Someone” is at the other end; you don’t know who!!
+> - Usually there is no user authentication in SSL, but in the application layer!
+> Use Client-Certificates for ensure other security properties as Authentication, Integrity, Non-Repudiation etc..
