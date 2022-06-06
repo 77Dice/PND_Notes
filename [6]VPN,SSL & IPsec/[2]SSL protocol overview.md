@@ -41,7 +41,7 @@
 > - Grade of encryption (previous to TLSv1.1)
 > - Encryption algorithm
 > - Mode of block encryption (if block cipher used)
-> - Cryptographic checksum algorithm
+> - Cryptography checksum algorithm
 > 
 > example: TLS_RSA_WITH_AES_128_CBC_SHA
 > 
