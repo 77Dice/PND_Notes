@@ -127,27 +127,78 @@ This allows a server to **present multiple certificates** on the same IP address
   - clear only after TLS established from the client
 
 ## SOCKS proxy
-> similar to CONNECT Proxy ... but more versatile,
-> It can relay ANY PROTOCOL: [SOCKS](https://en.wikipedia.org/wiki/SOCKS)
-
-just enable same proxy but on every port available 
-is a Circuit Level GW
-implement a lot of things 
-
-● Circuit level gateway
-
-– Works at the session layer of the OSI model, or as a "shim-
-layer" between the application layer and the transport
-
-layer of the TCP/IP stack
-
-● Similar to the HTTP CONNECT proxy
-– A bit more versatile:
-● Many authentication mechanisms
-● Can tunnel TCP, but also UDP and IPv6 (SOCKS5)
-● Can also work as a reverse proxy
-● Implemented in SSH, putty and Tor
-
+> similar to CONNECT Proxy ... but more versatile and very flexible
+- Many authentication mechanisms
+- Can tunnel TCP, but also UDP and IPv6 (SOCKS5)
+- Can also work as a reverse proxy
+- Implemented in SSH, putty and Tor
+> It can relay ANY upper-layer PROTOCOL: [SOCKS](https://en.wikipedia.org/wiki/SOCKS)
+- HTTP CONNECT is an applicaiton layer protocol (lv. 7)
+- SOCKS is a **shim-layer** between the Presentation layer and the transport layer of the TCP/IP stack
+- it is at **session layer** of OSI (lv. 5)
+- used for [**circuit-level gateways**](https://en.wikipedia.org/wiki/Circuit-level_gateway)
 
 ## Transparent proxy
+> A transparent proxy is made for normal user procedures and normal client applications (transparent to the clients)
+
+> *a system that appears like a packet filter to clients, and like a classical proxy to servers* [RFC1919](https://datatracker.ietf.org/doc/html/rfc1919#section-4)
+
+> What is the difference with NAT?
+> 
+> - Proxy enable TCP session between client and server 
+> - NAT only switch IP addresses and it works on lower level
+> - Proxy needs an APPLICATION to run inside a host (cannot be a router!!)
+> - On a proxy we create a DIFFERENT PACKET!!
+
+
+### How it works?
+> [Reference](https://milestone-of-se.nesuke.com/en/sv-advanced/server-software/transparent-proxy-2/)
+
+- At the start of a session, a TCP packet with a source address of Client and a destination address of Server travels to the proxy system, expecting to cross it just like a normal IP gateway
+- The proxy's TCP/IP software stack sees this incoming packets for a destination address that is NOT one of its own addresses
+- Forward or drop the packet? → ACCEPT!
+  - It PRETENDS to be the Server
+  - then operates like a standard proxy, as a middle-point between Client and Server
+
+> Normal vs. Transparent proxy 
+> ![image](/images/normal_vs1.PNG)
+> Possible only with HTTP in clear 
+
+- Proxy intercepts the HTTP requests that has the IP address of the Server
+- Again, it does not know the hostname, but has to look for in within the HTTP request
+- **What about HTTPS?**  → See reverse proxy and SSL bump
+- How to intercept the HTTP/HTTPS requests?
+  - If we do the interception at the default route, we will break other protocols such as SMTP, POP, IMAP
+  - Then?
+  - Policy-based routing (PBR)
+
+> HTTPS in normal vs. Transparent proxy
+> ![image](/images/normal_vs2.PNG)
+> why is not working: TLS certificate NOT match Exception!!
+
+### Policy-based routing
+In traditional routing: "All routing is a destination-driven process”
+> Policy based routing *goes beyond simple destination-driven routing*
+> - decisions based on other info: Quality of service, Source routing, Traffic shaping, Etc.
+
+This can be used with Transparent proxy for type of request protocol (if HTTPS DO NOT intercept)
+
+![image](/images/config_proxy.PNG)
+
+### ICAP:Internet Content Adaptation protocol
+> it is a protocol aimed at providing simple object-based content vectoring for HTTP services 
+> - lightweight protocol for executing a "remote procedure call" on HTTP messages
+> - ICAP clients pass HTTP messages to ICAP servers for some sort of transformation or other processing
+> 
+> [RFC3507](https://datatracker.ietf.org/doc/html/rfc3507)
+
+Coupled with transparent proxy (acting as a ICAP client), it allows to transparently provide additional functionalities, using a standardized interface towards ICAP servers
+
+usage:
+- Simple *transformations of content* can be performed near the edge of the network instead of requiring an updated copy of an object from an origin server
+- Expensive operations on the content can *be performed by “surrogates”* instead of the origin server
+- *Checking if* requested URIs are allowed or not
+
+
+
 
