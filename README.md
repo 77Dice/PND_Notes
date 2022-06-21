@@ -1,10 +1,6 @@
 # PND_Notes
 Notes and Laboratories from Practical Network Defense Course of Master Degree in Cybersecurity SPRING 2022
 
-## idea :: mettere tutto dentro un unico file cosi da poter fare ricerca di parole...
-## fare lo stesso con i lab 
-quindi 2 soli grossi file .md
-
 ## Index
  
 - IPv6

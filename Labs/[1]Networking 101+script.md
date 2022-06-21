@@ -29,6 +29,7 @@
 |ifconfig ethx a.b.c.d netmask A.B.C.D broadcast e.f.g.h  | config IP of ethx interface |    
 | ifconfig ethx hw ether AA:BB:CC:DD:EE:FF  | change MAC address |
 | route add default gw a.b.c.d  | set default route gateway  |
+|arp -i ethx| show & modify arp table on specific interface |
 
 > [route man page](https://man7.org/linux/man-pages/man8/route.8.html)
 
