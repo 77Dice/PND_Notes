@@ -32,6 +32,7 @@ ip route add <SUBremoteNET> via 10.0.0.2
 
 # OpenVPN
 > Open-source software to realize VPN, namely ***encrypted tunnels***
+> - [howTo](https://openvpn.net/community-resources/how-to/)
 > - OpenSSL based (crypto-auth-integr library)
 > - UDP with one single port 
 >   - reliability is already achieved by protocols forwarded inside the tunnel
@@ -53,6 +54,10 @@ The endpoints share a key generated with openvpn command
   - HMAC_AB / HMAC_BA (one way authentication)
 
 ## Dynamic mode
+Uses SSL/TLS and certificates for authentication(both endpoints) + key exchange
+- If the certificates are valid
+  - HMAC and encryption keys are dynamically generated with OpenSSL
+  - assures [Forward Secrecy](https://en.wikipedia.org/wiki/Forward_secrecy)
 
 ### EX2 
 > GOAL: setup tunnel in privileged mode and use OpenVPN for encryption (Static & Dynamic mode)
@@ -60,11 +65,50 @@ The endpoints share a key generated with openvpn command
 ## static mode
 # key generation to exchange using scp
 opnevpn --genkey --secret secret.key
+...
+# open connection or listen on port 1194
+openvpn --config shared/alice.ovpn
+```
+```bash
+## configuration file
+# alice.ovpn
+port 1194
+proto udp 
+dev tun
+secret secret.key
+cipher AES-256-CBC
+ifconfig 10.10.10.1 10.10.10.2
+# route <remoteNet> <subnet> <RemoteEndpoint>
+route 192.168.2.0 255.255.255.0 10.10.10.2
+```
+```bash
+## configuration file r2
+# bob.ovpn
+remote <AliceIPaddr>
+port 1194
+proto udp
+dev tun
+secret secret.key
+cipher AES-256-CBC
+ifconfig 10.10.10.2 10.10.10.1
+route <remoteNet> <subnet> <RemoteEndpoint>
+```
+- Alice has passive role: waiting for connection from bob
+***
+> [DynamicVPN_guide](https://github.com/OpenVPN/easy-rsa/blob/master/README.quickstart.md)
+general phases:
+- create Certification Authority
+  - (public key and private key of the CA)
+  - it will sign other certificates 
+- we generate keypairs for server and clients 
+- we made a signature request (bound identity with public key) for server or client
+  - generate certificates (server/clients)
 
-file.conf???
-
-
-
+```bash
+# sampling files
+/usr/share/easy-rsa
+/usr/share/doc/openvpn/examples/sample-keys
+/usr/share/doc/openvpn/examples/sample-config-files/
 
 ```
-follow 
+
