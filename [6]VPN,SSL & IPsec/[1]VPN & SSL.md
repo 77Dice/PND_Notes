@@ -40,7 +40,7 @@ $\rightarrow$ Replay Protection(*reuse packets*) + Access Control + Traffic Anal
 
 |Layers|Transparency|Flexibility|Simplicity|Protection Idea|
 |--|--|--|--|--|
-|Physical |full(*no changes on top*)|bad|excellent||
+|Physical |full(*no changes on top*)|bad|excellent|x|
 |Data Link|full|bad|excellent|protect a single link|
 |Network|possible|need SW/HW mods|site-to-site good // host-to-site a lot of config|protect end-to-end systems|
 |Transport|possible|need SW/HW mods|site-to-site + host-to-site good|protect end-to-end processes|
@@ -48,7 +48,7 @@ $\rightarrow$ Replay Protection(*reuse packets*) + Access Control + Traffic Anal
 
 
 > *When we can implement VPN?* It looks best to introduce security in the:
-- App Layer (*S/MIME;PGP*)
+- App Layer (*S/MIME;PGP;secure mail*)
 - ***Transport Layer*** (*SSLv3/TLSv1;OpenVPN*)
 - ***Network Layer*** (*IPSEC*)
 - Data Link layer (*PPP;PPTP;L2TP;LTF*)
@@ -126,7 +126,7 @@ TCP port 443 (standard) opened on FW for the address of the device
 
 ● Note that the host-to-host communication does not need to use IP
 
-#### Secure tunneling 
+### Secure tunneling 
 ● Idea: *Encrypt* the PDU, *and then encapsulate* it in another PDU sent out on the network connecting the two sites
 - Encryption can take place in edge router on src. site
 - Decryption can take place in edge router on dst. site
@@ -190,4 +190,4 @@ TCP port 443 (standard) opened on FW for the address of the device
 > Trust: what does the server really know about the client?
 > - SSL provides a secure pipe. “Someone” is at the other end; you don’t know who!!
 > - Usually there is no user authentication in SSL, but in the application layer!
-> Use Client-Certificates for ensure other security properties as Authentication, Integrity, Non-Repudiation etc..
+> Use Client-Certificates for ensure other security properties as Authentication, Non-Repudiation etc..

@@ -3,12 +3,16 @@
 ## IProute2
 
 > ([iproute2 Howto Wiki](http://www.policyrouting.org/iproute2.doc.html)) offers complete low-level network configuration 
+> - [ip-link MAN Page](https://man7.org/linux/man-pages/man8/ip-link.8.html)
+> - [ip-route MAN Page](https://man7.org/linux/man-pages/man8/ip-route.8.html)
+> - [ip-neigh MAN Page](https://man7.org/linux/man-pages/man8/ip-neighbour.8.html)
 
 | command | description | 
 | --| --|
 |ip link \ ip l  | show physical interfaces  |
 |ip link set ethx address a:b:c:d:e:f  | set MAC address |
-|ip link set ethx [up\down]  | plug-unplug cable  |  			    
+|ip link set ethx [up\down]  | plug-unplug cable  | 
+|ip link add name [tun0] type [ipip] ...|create virtual interface/tunnel| 			    
 |ip addr \ ip a show [dev ethx]  | show ip address  | 
 |ip addr [add\del] a.b.c.d/m dev ethx  | add/remove ip address |			    
 |ip addr flush [dev ethx]  | **destroy interface** and remove any assigned address |

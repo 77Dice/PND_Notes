@@ -67,6 +67,8 @@ It is an extension (RFC 6520) that allows **to keep an established session alive
 As a protection against a replay attack: HeartbeatRequest packets include a payload that must be returned without change by the receiver in its HeartbeatResponse packet
 
 ### Heartbleed bug
+> ![image](/images/Heartbleed_explanation.png.png)
+
 The receiver of request did not check that **the size of the payload in the packet** actually equaled **the value given** by the sender to the payload length field in the request packet
    - The attacker sends little data but **sets the size to max**
    - The receiver **allocates that amount** of memory for the response and ***copied max bytes from the mem location where the request packet was received***

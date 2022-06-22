@@ -1,7 +1,7 @@
 # IPsec
 ![image](/images/ipsec.PNG)
 Network Layer protocol suite for providing security over IP
-- a part of IPv6; an add-on for IPv4
+- part of IPv6; an add-on for IPv4
 - Basic functions are provided by sub-protocols
 
 ### IPsec services
