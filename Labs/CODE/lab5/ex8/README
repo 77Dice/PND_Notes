@@ -1,0 +1,10 @@
+One router acting as a VPN gateway for a lan. Setup the host-to-site tunnel
+for the road warrior host towards the lan, using the strongSwan framework.
+
+The setup is already done with the following IPv4 scheme:
+- lanA: 192.168.1.0/24 (r1 has .1)
+- r1 has 100.60.0.2/16 and 192.168.1.1/24
+- rw1 has 100.90.0.100/16
+- isp has 100.60.0.1 and 100.90.0.1
+
+Recall to start the ipsec daemon with "ipsec start"

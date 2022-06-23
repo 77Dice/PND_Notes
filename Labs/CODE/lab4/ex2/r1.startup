@@ -6,4 +6,9 @@ ip addr add 2001:db8:cafe:2::1/64 dev eth1
 ip addr add fe80::1/64 dev eth1
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo 2001:db8:cafe:1::10 pc1 >> /etc/hosts
+echo 2001:db8:cafe:1::80 s1 >> /etc/hosts
+echo 2001:db8:cafe:2::2 local-host >> /etc/hosts
 
+
+# ip6tables

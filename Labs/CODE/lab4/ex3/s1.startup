@@ -13,3 +13,10 @@ echo "ServerName 203.0.113.80" | tee /etc/apache2/conf-available/fqdn.conf
 a2enconf fqdn
 /etc/init.d/apache2 restart
 
+
+echo 2001:db8:beef:1::1 isp >> /etc/hosts
+echo 2001:db8:beef:1::30 local-host >> /etc/hosts
+echo 2001:db8:beef:1::29 r1 >> /etc/hosts
+echo 2001:db8:cafe:1::10 pc1 >> /etc/hosts
+
+echo 2001:db8:cafe:2::25 s2 >> /etc/hosts

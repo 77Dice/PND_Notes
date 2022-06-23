@@ -8,4 +8,3 @@ ip addr add 192.168.0.1/24 dev eth1
 udhcpd -S
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-# iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80|22 -j DNAT --to-destination s1|pc1

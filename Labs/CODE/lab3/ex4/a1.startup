@@ -1,0 +1,3 @@
+dpkg -i /shared/lib*.deb
+
+

@@ -1,8 +1,15 @@
-ip addr add 2001:db8:beef::1/64 dev eth0
+ip addr add 2001:db8:beef:1::1/64 dev eth0
 ip addr add fe80::1/64 dev eth0
 ip addr add 198.51.100.254/24 dev eth0
 
 ip -6 route add 2001:db8:cafe::/48 via fe80::2 dev eth0
 ip route add 192.168.100.0/24 via 198.51.100.29
 ip route add 203.0.113.0/24 via 198.51.100.29
+
+echo 2001:db8:beef:1::30 local-host >> /etc/hosts
+echo 2001:db8:beef:1::29 r1 >> /etc/hosts
+echo 2001:db8:cafe:1::10 pc1 >> /etc/hosts
+echo 2001:db8:cafe:2::80 s1 >> /etc/hosts
+echo 2001:db8:cafe:2::25 s2 >> /etc/hosts
+
 
