@@ -1,5 +1,7 @@
 # IPsec
 > [RFC_4301](https://datatracker.ietf.org/doc/html/rfc4301) : Security Architecture for the Internet Protocol (ipsec)
+> 
+> [ref.](http://www.tcpipguide.com/free/t_IPSecurityIPSecProtocols.htm)
 
 ![image](/images/ipsec.PNG)
 Network Layer protocol suite for ***providing security over IP***
@@ -46,8 +48,8 @@ GOAL $\rightarrowtail$ agree on how to make communication secure
 |Discard|Bypass (send in clear)|Secure|
 |--|--|--|
 |reject to send/receive the packet|do not handle with IPsec|handle with IPsec|
-- the policy is in the form:
-  - *protocol/mode/src-dst/level* 
+> - the policy is in the form:
+>   - ***protocol/mode/src-dst/level*** 
 - where:
 
 |Protocol|Mode|Src-dst|Level|
@@ -59,7 +61,7 @@ GOAL $\rightarrowtail$ agree on how to make communication secure
 - The possible fields for constructing the selector can be:
   - src/dest addr, Transport Layer Protocol, src/dst Protocol Ports, User ID or System name etc.
 
-## SP example
+### SP example
 ```bash
 #ip from [port] dest [port]
 100.90.0.100[any] 100.60.0.100[any]
@@ -96,7 +98,7 @@ esp/trasport//require
 - Security Associations are stored in the [***Security Association Database***](https://what-when-how.com/ipv6-advanced-protocols-implementation/security-association-database-ipv6-and-ip-security/) (SAD)
 > you need one SA **for every single host you are communicating**; one for every channel established
 
-## SA example
+### SA example
 ```bash
 #src/dest addr
 100.60.0.100 100.90.0.100
@@ -168,7 +170,9 @@ IP header fields contains:
 ### Authentication in IPv4/v6
 - AH header inserted after the outermost IP header
   - depending on whether Transport or Tunnel mode is used
+  ### ***REMEMBER!!***
 - Do not forget that integrity check (and thus authentication) **does not cover any mutable**, unpredictable **header fields** (TTL, checksum etc.)
+  - Such fields are assumed to be zero for MAC computation
 > IPv4 authenticated packet
 > ![image](/images/ipv4_auth.PNG)
 
@@ -203,9 +207,42 @@ IP header fields contains:
    - Encryption is applied to entire authenticated inner packet
 >***remember*** $\rightarrowtail$ one SA is bounded with AH or ESP, you need 4 SA for bidirectional communication using both sub-protocols
 
-## Internet Key Exchange protocol v2 TODOOOO
+> - AH provides data integrity and replay protection
+> - ESP provides data integrity, replay protection and encryption
+## Internet Key Exchange protocol v2 
+> A standardized authentication & key management protocol [RFC5996](https://datatracker.ietf.org/doc/html/rfc5996)
+> - dynamically establish SAs between two endpoints
+> - IKEv2 provides unified authentication and key establishment
+>   - Support for DoS mitigation through use of cookies
+>   - Mutual authentication of the Initiator and Responder
+>   - Negotiation of cryptographic suites
+>   - latency is 2 round trips (i.e., 4 messages) in
+the common case
+> - Tries to achieve trade-off between features, complexity and security under realistic threat model
+> - Runs on UDP ports { 500, 4500 }
 
+### IKEv2 phases
+IKEv2 communication consists of message pairs; It run starts with two exchanges 
 
+one pair(req/response) is called an exchange 
+
+1. *initialization & negotiation (Phase 1) IKE_SA_INIT* 
+   - *Negotiates security parameters* for a security association (IKE_SA)
+     - encryption alg, Integr. protection alg, DH group(p,g) PR function etc...
+   - Sends nonces and Diffie-Hellman values (agree on shared key)
+   - ***IKE_SA*** is a set of security associations 
+     - used to encrypt and integrity protect all the remaining IKEv2 exchanges     
+2. *authentication (Phase 2) IKE_AUTH*
+   - Authenticates the previous messages
+     - by bublic key signatures or long-term pre-shared key
+   - Transmits identities
+   - Proves knowledge of corresponding identity secrets
+   - Creates first ***CHILD_SA*** 
+     - *derived from SA : parameters you want to use in the channel*
+     - A CHILD_SA is a set of SAs, used to protect IP traffic with AH/ESP protocol
+     - The term CHILD_SA is synonymous to the common definition of an SA for IPSec AH and ESP
+3. ### IKE outcome 
+  - ![image](/images/ike.PNG)
 
 # IPsec Overview
 ![image](/images/ipsecBIG.PNG)
