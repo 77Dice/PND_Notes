@@ -100,7 +100,8 @@ Starting from a 48-bit MAC address
 ## IPv6 Multicast Addresses
 
 > How send single packet `to multiple destinations` simultaneously? (one-to-many)
-> ![picture 11](../images/multicast12.png) <p align = "center" >	
+> 
+> ![picture 11](/images/multicast12.PNG) <p align = "center" >	
 	<em> Multicast Address </em>
 </p>
 
@@ -143,11 +144,11 @@ ff02::1:ff28:9c5a                           Solicited-Node multicast address (co
 - 1 :: `Non-permanently-assigned` , "dynamically" assigned
 
 > Well-known Assigned IPv6 Multicast Addresses [IANA-Reference](https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml)
-> ![picture 12](../images/multi-ll.png) <p align = "center" >	
+> ![picture 12](/images/multi-ll.png) <p align = "center" >	
 	<em> Link-local scope Assigned MultiCast Addresses </em>
 </p>
 
-> ![picture 13](../images/multi-5.png) <p align = "center" >	
+> ![picture 13](/images/multi-5.png) <p align = "center" >	
 	<em> Site-local scope Assigned MultiCast Addresses </em>
 </p>
 
@@ -155,13 +156,13 @@ ff02::1:ff28:9c5a                           Solicited-Node multicast address (co
 - every IPv6 device will listen and process packets
 - more efficient that IPv4 Ethernet Broadcast
 
-> ![picture 14](../images/ROuterAdv.png) <p align = "center" >	
+> ![picture 14](/images/ROuterAdv.png) <p align = "center" >	
 	<em> Router Advertisement </em>
 </p>
 
 - <u>All IPv6 Routers:</u> `FF02::2` All Routers
 - used by devices to communicate with IPv6 Routers
 
-> ![picture 15](../images/ROuterSol.png) <p align = "center" >	
+> ![picture 15](/images/ROuterSol.png) <p align = "center" >	
 	<em> Router Solicitation </em>
 </p>
