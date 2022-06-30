@@ -1,11 +1,12 @@
 # Network Hardening
+
 Computer networks are composed by different devices, if even one of them **is breached**, the entire infrastructure **can be compromised**
 
 >**methodology** *to protect network devices* : 
-> 
-> **The purpose** of network devices is to move packets through the network according to the security policies established by governance
-> 
-> Without proper protections, attacks can be made to alter packet forwarding rules, potentially causing security policy violations
+
+>  ***The purpose*** *of network devices is to move packets through the network **according to the security policies** established by governance*
+ 
+>*Without proper protections, attacks can be made to alter packet forwarding rules, potentially causing security policy violations*
 
 - to reduce the risk of violations
 - to limit the impact of anomalous events : whether
@@ -33,6 +34,8 @@ errors or failures)
 > *violations when* --> external events + malicious interventions(spoofing, redirect, hijacking, etc.) + failures
 > 
 > *resulting in* --> alteration of packets and block of networks services 
+
+
 
 - In all the three areas of action of the network devices
 it is possible to have violations
@@ -119,7 +122,7 @@ It is therefore essential:
   - *limit the use of Debugging* only to the time required to solve a sudden anomaly
 - that the Syslog server has an adequate **log storage capacity**, both in terms of space and computing capacity
 
-# Control Plane protection
+# [Control Plane](https://www.cisco.com/c/en/us/td/docs/ios/12_2sb/feature/guide/cpp.html) protection
 Prevents devices from using non-genuine information 
 >1. avoid **unauthorized changes** to the way traffic moves through the network 
 >    - routing protocols *with authentication* --> to forwarding packets according to the correct routes
@@ -139,7 +142,7 @@ it is ***good practice*** to use the ICMP packet filtering mechanism ***to block
 - *ICMP unreachable* : which informs the sender of a packet that the final destination is unavailable (e.g., not responding to ARPs or no route to that destination)
   - The unreachable ICMPs, besides overloading the CPU of the routers, can be **used to know the internal topology of a network**
 
-> Control Plane Policing & Ctrl Plane Protection are series of measures that can **limit the packets** addressed directly to the devices and **that require the use of their CPUs**
+> Control Plane Policing & Control Plane Protection are series of measures that can **limit the packets** addressed directly to the devices and **that require the use of their CPUs**
 
 # Data Plane protection
 because network devices operate with virtually **no administrator intervention once configured**, it is challenging observing security policy violations *without proper monitoring*
@@ -193,3 +196,23 @@ trusted DHCP server
   - NTP from Trusted SRV ONLY
   - SSH from admin hosts ONLY
   - ICMP/SNMP from admin hosts ONLY
+
+
+*** 
+> [the three Planes](https://www.ciscopress.com/articles/article.asp?p=2928193) cisco reference
+
+***
+
+Control plane is about two main things : 
+1. How packets are forwarded in the network (packet flow as defined by policies) so use authenticated routing protocols + disable ICMP redirects & unreachable  ( Layer 3  & IP Prot.)
+2. protection against attacks directed to CPU limits of Network Devices (as DoS) so limit the packets that requires use of the CPU
+
+Data plane is active on several layers:
+
+- Ly 2 : MAC - IP association changes; switching frames in the local network so this is about ARP/CAM table and related attacks
+- Ly 3/4 : here taken the forwarding information from Control plane to send packets between subnets;
+it will focus on Access Control, Packet Filtering and QoS. 
+here is about define trusted Sources and blocks packets that do not correspond to expected traffic 
+following the principle of "Least permission"
+
+***

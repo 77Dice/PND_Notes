@@ -3,7 +3,7 @@
 > - you need only one rule in Firewall for a proxy
 > - only the proxy can access the internet (HTTP, FTP etc..)
 
-- Authentication, Authorization, Auditing (AAA)
+- Authentication, Authorization, Auditing
 - whitelisting, blacklisting (**Content-filtering Proxy**): proxy controls over the content that may be relayed
 - Caching $\rightarrow$ store the retrieved document into a local file for further use so it won’t be necessary to connect to the remote server the next time that document is requested
   - How long is it possible to keep a document in the cache and still be sure that it is up-to-date?
