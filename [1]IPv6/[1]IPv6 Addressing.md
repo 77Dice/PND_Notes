@@ -144,11 +144,11 @@ ff02::1:ff28:9c5a                           Solicited-Node multicast address (co
 - 1 :: `Non-permanently-assigned` , "dynamically" assigned
 
 > Well-known Assigned IPv6 Multicast Addresses [IANA-Reference](https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml)
-> ![picture 12](/images/multi-ll.png) <p align = "center" >	
+> ![picture 12](/images/multi-ll.PNG) <p align = "center" >	
 	<em> Link-local scope Assigned MultiCast Addresses </em>
 </p>
 
-> ![picture 13](/images/multi-5.png) <p align = "center" >	
+> ![picture 13](/images/multi-5.PNG) <p align = "center" >	
 	<em> Site-local scope Assigned MultiCast Addresses </em>
 </p>
 
