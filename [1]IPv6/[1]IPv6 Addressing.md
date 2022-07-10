@@ -156,13 +156,13 @@ ff02::1:ff28:9c5a                           Solicited-Node multicast address (co
 - every IPv6 device will listen and process packets
 - more efficient that IPv4 Ethernet Broadcast
 
-> ![picture 14](/images/ROuterAdv.png) <p align = "center" >	
+> ![picture 14](/images/ROuterAdv.PNG) <p align = "center" >	
 	<em> Router Advertisement </em>
 </p>
 
 - <u>All IPv6 Routers:</u> `FF02::2` All Routers
 - used by devices to communicate with IPv6 Routers
 
-> ![picture 15](/images/ROuterSol.png) <p align = "center" >	
+> ![picture 15](/images/ROuterSol.PNG) <p align = "center" >	
 	<em> Router Solicitation </em>
 </p>
